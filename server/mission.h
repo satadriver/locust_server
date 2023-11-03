@@ -77,3 +77,5 @@ private:
 
 
 char* buildCmd(CONST char* data, int datalen, int type);
+
+char* buildCmd2(CONST char* data1, int datalen1, int type1, const char* data2, int datalen2, int type2);

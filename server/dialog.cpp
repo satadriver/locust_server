@@ -177,6 +177,8 @@ INT __stdcall deleteObj(CMD_PARAMS * params) {
 
 		ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, sizeof(int) + sizeof(MY_CMD_PACKET));
 
+		delete buf;
+
 		char* data = packet.getbuf();
 		int datasize = packet.getbufsize();
 		if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)

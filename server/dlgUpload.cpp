@@ -10,6 +10,7 @@
 #include "mission.h"
 #include "packet.h"
 #include "dlgCmd.h"
+#include "FileHelper.h"
 
 using namespace std;
 
@@ -34,6 +35,27 @@ DialogUpload::~DialogUpload() {
 }
 
 
+string selectFileName() {
+	int ret = 0;
+	OPENFILENAMEA opfn = { 0 };
+	CHAR file_name[0x1000];
+	opfn.lStructSize = sizeof(OPENFILENAMEA);
+	opfn.lpstrFilter = "所有文件\0*.*\0\0";
+	//指向一对以空字符结束的过滤字符串的一个缓冲。缓冲中的最后一个字符串必须以两个  NULL字符结束。
+	opfn.nFilterIndex = 1;    //指定在文件类型控件中当前选择的过滤器的索引
+	opfn.lpstrFile = file_name;
+	opfn.lpstrFile[0] = '\0'; //这个缓冲的第一个字符必须是NULL
+	opfn.nMaxFile = sizeof(file_name);
+	opfn.Flags = 0;  //OFN_FILEMUSTEXIST OFN_PATHMUSTEXIST指定用户仅可以在文件名登录字段中输入已存在的文件的名字。	
+	ret = GetOpenFileNameA(&opfn);
+	if (ret)
+	{
+		return string(file_name);
+	}
+	return "";
+}
+
+
 int __stdcall uploadFile(CMD_PARAMS* params) {
 // 	CMD_PARAMS* params = new CMD_PARAMS;
 // 	params->id = dialog->m_id;
@@ -47,24 +69,39 @@ int __stdcall uploadFile(CMD_PARAMS* params) {
 	int ret = 0;
 
 	string id = params->id;
-	string cmd = params->cmd;
+	string lfn = params->cmd;
+	string rfn = params->append;
 
 	delete params;
 
 	PacketParcel packet(TRUE, id);
 
-	ret = packet.postCmd(CMD_READ_ONLINE, 0, 0);
+	char* filedata = 0;
+	int filesize = 0;
+	ret = FileHelper::fileReader(lfn.c_str(), &filedata, &filesize);
+	if (ret == 0)
+	{
+		return FALSE;
+	}
+	char* buf = buildCmd2(rfn.c_str(),rfn.size(), MISSION_TYPE_UPLOAD, filedata, filesize, MISSION_TYPE_UPLOAD);
+	if (buf == 0)
+	{
+		return FALSE;
+	}
+	int packsize = sizeof(MY_CMD_PACKET) + sizeof(MY_CMD_PACKET) + filesize + rfn.size();
+	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, packsize);
+	delete buf;
 
 	char* data = packet.getbuf();
-	int datasize = packet.getbufsize();
+	size_t datasize = packet.getbufsize();
 	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
 	{
 		return FALSE;
 	}
 
-	string stronline = string(data + 4, datasize - 8);
-	HWND list = GetDlgItem(g_dlgUpload->m_hwnd, IDC_LIST3);
-	ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)stronline.c_str());
+// 	string stronline = string(data + 4, datasize - 8);
+// 	HWND list = GetDlgItem(g_dlgUpload->m_hwnd, IDC_LIST3);
+// 	ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)stronline.c_str());
 	return 0;
 }
 
@@ -81,9 +118,36 @@ INT_PTR DialogUpload::dlgUploadProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		int wh = wparam >> 16;
 		int ll = lparam & 0xffff;
 		int lh = lparam >> 16;
-		if (wparam == IDOK)
+		if (wl == IDC_BUTTON1)
 		{
+			string fn = selectFileName();
+			if (fn != "")
+			{
+				SetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT4, fn.c_str());
+			}
+		}
+		else if (wl == IDC_BUTTON2)
+		{
+			string fn = selectFileName();
+			if (fn != "")
+			{
+				SetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT5, fn.c_str());
+			}
+		}
+		else if (wl == IDOK)
+		{
+			int ret = 0;
+			char lfn[0x1000];
+			char rfn[0x1000];
+			ret = GetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT4, lfn, sizeof(lfn));
+			ret = GetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT5, rfn, sizeof(rfn));
 
+			CMD_PARAMS* params = new CMD_PARAMS;
+			params->id = g_dlgUpload->m_id;
+			params->cmd = string(lfn);
+			params->append = string(rfn);
+
+			ret = uploadFile(params);
 		}
 	}
 	else if (msg == WM_SYSCOMMAND)
@@ -92,6 +156,7 @@ INT_PTR DialogUpload::dlgUploadProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		int wh = wparam >> 16;
 		int ll = lparam & 0xffff;
 		int lh = lparam >> 16;
+
 	}
 	else if (msg == WM_CTLCOLORDLG)
 	{

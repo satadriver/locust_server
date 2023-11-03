@@ -12,6 +12,7 @@ typedef struct {
 
 	string id;
 	string cmd;
+	string append;
 }CMD_PARAMS;
 #pragma pack()
 

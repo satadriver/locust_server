@@ -82,6 +82,9 @@ int __stdcall getDrive(CMD_PARAMS* params) {
 	char* buf = buildCmd(0, 0, MISSION_TYPE_DRIVE);
 
 	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, 0 + sizeof(MY_CMD_PACKET));
+
+	delete buf;
+
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
 	if (datasize <= 4 && *(DWORD*)data != DATA_PACK_TAG) {
@@ -159,6 +162,8 @@ int __stdcall getFile(CMD_PARAMS* params) {
 	char* buf = buildCmd(curpath.c_str(), curpath.size(), MISSION_TYPE_DIR);
 
 	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, curpath.size() + sizeof(MY_CMD_PACKET));
+
+	delete buf;
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
