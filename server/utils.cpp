@@ -14,6 +14,7 @@
 #include <iostream>
 #include <string>
 #include "public.h"
+#include "FileHelper.h"
 
 #pragma comment(lib,"wtsapi32.lib")
 #pragma comment(lib,"Userenv.lib")
@@ -100,25 +101,16 @@ int commandline(WCHAR* szparam, int wait, int show,DWORD * ret) {
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 	}
-	mylog(L"[mytestlog]command:%ws result:%d process code:%d thread code:%d errorcode:%d\r\n", szparam, result, processcode, threadcode, errorcode);
+	runLog(L"[mytestlog]command:%ws result:%d process code:%d thread code:%d errorcode:%d\r\n",
+		szparam, result, processcode, threadcode, errorcode);
 	return result;
 }
 
 
 
-int __cdecl mylog(const WCHAR* format, ...)
+int __cdecl runLog(const WCHAR* format, ...)
 {
 	int result = 0;
-
-	WCHAR procname[MAX_PATH];
-	result = GetModuleFileNameW(0, procname, MAX_PATH);
-	WCHAR* process_name = wcsrchr(procname, L'\\');
-	if (process_name)
-	{
-
-	}
-	else {
-	}
 
 	WCHAR showout[2048];
 
@@ -132,25 +124,15 @@ int __cdecl mylog(const WCHAR* format, ...)
 
 	OutputDebugStringW(showout);
 
+	result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, (char*)showout, len*sizeof(WCHAR), FILE_WRITE_APPEND);
+
 	return len;
 }
 
 
-
-
-int __cdecl mylog(const CHAR* format, ...)
+int __cdecl runLog(const CHAR* format, ...)
 {
 	int result = 0;
-
-	CHAR procname[MAX_PATH];
-	result = GetModuleFileNameA(0, procname, MAX_PATH);
-	CHAR* process_name = strchr(procname, L'\\');
-	if (process_name)
-	{
-
-	}
-	else {
-	}
 
 	CHAR showout[2048];
 
@@ -158,13 +140,40 @@ int __cdecl mylog(const CHAR* format, ...)
 
 	va_start(arglist, format);
 
-	int len = vsprintf_s(showout, sizeof(showout) , format, arglist);
+	int len = vsprintf_s(showout, sizeof(showout), format, arglist);
 
 	va_end(arglist);
 
 	OutputDebugStringA(showout);
 
+	result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, showout, len, FILE_WRITE_APPEND);
+
 	return len;
+}
+
+int __cdecl opLog(const CHAR* format, ...)
+{
+	int result = 0;
+
+	CHAR info[2048];
+
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	int offset = wsprintfA(info, "%2u:%2u:%2u %2u/%2u/%4u ", st.wHour, st.wMinute, st.wSecond,  st.wMonth, st.wDay,st.wYear);
+
+	va_list   arglist;
+
+	va_start(arglist, format);
+
+	offset += vsprintf_s(info + offset, sizeof(info) - offset , format, arglist);
+
+	va_end(arglist);
+
+	OutputDebugStringA(info);
+
+	result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, info, offset, FILE_WRITE_APPEND);
+
+	return offset;
 }
 
 
@@ -276,23 +285,21 @@ HANDLE  bRunning(BOOL* exist)
 
 
 
-int  isDebugged()
+int isDebugged()
 {
-	return IsDebuggerPresent();
+#ifdef _DEBUG
+	return FALSE;
+#endif
 
 #ifndef _WIN64
 	int result = 0;
 	__asm
 	{
-		// 进程的PEB
 		mov eax, fs: [30h]
 		// 控制堆操作函数的工作方式的标志位
 		mov eax, [eax + 68h]
-		// 操作系统会加上这些标志位FLG_HEAP_ENABLE_TAIL_CHECK, 
-		// FLG_HEAP_ENABLE_FREE_CHECK and FLG_HEAP_VALIDATE_PARAMETERS，
-		// 它们的并集就是x70
-		// 下面的代码相当于C/C++的
-		// eax = eax & 0x70
+		// 操作系统会加上这些标志位:FLG_HEAP_ENABLE_TAIL_CHECK, FLG_HEAP_ENABLE_FREE_CHECK and FLG_HEAP_VALIDATE_PARAMETERS
+		// 并集是x70
 		and eax, 0x70
 		mov result, eax
 	}
@@ -301,4 +308,35 @@ int  isDebugged()
 #else
 	return IsDebuggerPresent();
 #endif
+}
+
+
+
+int binarySearch(const char* data, int size, const char* tag, int tagsize) {
+	for (int i = 0; i <= size - tagsize; i++)
+	{
+		if (memcmp(data + i, tag, tagsize) == 0)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+
+int xor_crypt(char* data, int len) {
+	//return TRUE;
+
+	const char* key = "fuck crackers who want to crack this program!";
+	int keylen = lstrlenA(key);
+	for (int i = 0, j = 0; i < len; i++) {
+
+		data[i] = data[i] ^ key[j];
+		j++;
+		if (j >= keylen) {
+			j = 0;
+		}
+	}
+	return len;
 }

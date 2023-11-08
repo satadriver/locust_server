@@ -7,6 +7,7 @@
 #include "public.h"
 #include "mission.h"
 #include "packet.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -75,6 +76,8 @@ int __stdcall runcmd(CMD_PARAMS *params) {
 	
 	int len = SetDlgItemTextA(g_dlgCmd->m_hwnd, IDC_EDIT2, resdata);
 
+	opLog("object:%s run cmd:%s\r\n", params->id.c_str(), params->cmd.c_str());
+
 	delete params;
 
 	return 0;
@@ -126,14 +129,15 @@ INT_PTR DialogCommand::dlgCmdProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpa
 	else if (msg == WM_CLOSE)
 	{
 		EndDialog(hwnd, 0);
+		DestroyWindow(hwnd);
 	}
 	else if (msg == WM_DESTROY)
 	{
-		EndDialog(hwnd, 0);
+		PostQuitMessage(-1);
 	}
 	else if (msg == WM_CHAR)
 	{
-		printf("hello");
+
 	}
 	else if (msg == WM_RBUTTONDOWN)
 	{

@@ -42,13 +42,14 @@ vector<CLIENT_INFO> parseHosts(char * data,int size) {
 		client.date = string(str, len);
 		str += len;
 
+		client.tag = TRUE;
 		hosts.push_back(client);
 
 		if (memcmp(str,"@@@",3) == 0)
 		{
+			str += 3;
 			break;
-		}
-		str += 3;
+		}	
 	}
 
 	return hosts;

@@ -6,7 +6,9 @@
 using namespace std;
 
 
-#define CMD_UPDATE_DRIVE	WM_USER+2
+
+
+
 
 
 #pragma pack(1)
@@ -43,6 +45,12 @@ public:
 
 	string ascent();
 
+	string setPath(string path);
+
+	string getPath();
+
+	int rmenu();
+
 
 	HWND m_hwnd;
 
@@ -52,6 +60,7 @@ public:
 
 	string m_dir;
 
+	WNDPROC m_lbProc;
 };
 
 int createDlgFile(HINSTANCE hinst, string id);

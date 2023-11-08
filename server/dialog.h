@@ -6,9 +6,10 @@
 
 using namespace std;
 
-#define CMD_UPDATE_HOSTS	WM_USER+1
+#define CMD_UPDATE_HOSTS			WM_USER +	0x1001
+#define CMD_UPDATE_DRIVE			WM_USER	+	0x1000
 
-#define HOST_HEARTBEAT_INTERVAL 30000
+#define HOST_HEARTBEAT_INTERVAL		6000
 
 
 #define ONLINE_KEYNAME_ID		"ID"
@@ -16,11 +17,16 @@ using namespace std;
 #define ONLINE_KEYNAME_TIME		"TIME"
 #define ONLINE_KEYNAME_STATUS	"STATUS"
 
-#define ONLINE_FORAMT						"ID:%s,IP:%s,TIME:%s,STATUS:%s"
+#define OBJECT_INFO_FORAMT					"ID:%s,IP:%s,TIME:%s"
+#define ONLINE_FORAMT						OBJECT_INFO_FORAMT ",STATUS:%s\r\n"
 
 #define ONLINE_KEYVALUE_STATUS_ALIVE		"alive"
 
 #define ONLINE_KEYVALUE_STATUS_DEAD			"dead"
+
+#define LOCAL_OBJECTS_FILENAME				"sysinfo"
+
+
 
 #pragma pack(1)
 
@@ -47,11 +53,11 @@ public:
 
 	~MyDialog();
 
-	static int __stdcall ruDialog(MyDialog *dialog);
+	static int __stdcall runDialog(MyDialog *dialog);
 
 	static INT_PTR dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-	int showObjects();
+	int updateObjects();
 
 	int rmenu();
 

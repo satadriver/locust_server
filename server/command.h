@@ -15,7 +15,7 @@ typedef struct
 	string host;
 	string ip;
 	string date;
-
+	int tag;
 }CLIENT_INFO;
 
 #pragma pack()

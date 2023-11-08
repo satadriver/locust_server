@@ -45,6 +45,9 @@ HttpProto::HttpProto(wchar_t* ip, unsigned short port, wchar_t* app)
 
 	//m_boundary = BuildBoundary(bound);
 	m_boundary = L"ThisIsMyBoundary";
+
+	m_resp = 0;
+	m_respLen = 0;
 }
 
 
@@ -254,6 +257,12 @@ bool HttpProto::httpRequest(char* data, int datasize)
 		return sendok;
 	}
 
+	DWORD dwOption = WINHTTP_DECOMPRESSION_FLAG_ALL;
+	DWORD dwL = sizeof(dwOption);
+	opSuccess = WinHttpSetOption(hRequest, WINHTTP_OPTION_DECOMPRESSION, &dwOption, dwL);
+
+	opSuccess = GetLastError();
+
 	//     opSuccess = WinHttpAddRequestHeaders(hRequest, L"Expect:100-continue", -1L, 0);
 	//     if (!hRequest) {
 	//         sendok = false;
@@ -284,6 +293,8 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
 	if (data && datasize)
 	{
+		xor_crypt(data, datasize);
+
 		opSuccess = WinHttpWriteData(hRequest, data, datasize, &btsWritten);
 		if (!opSuccess) {
 			sendok = false;
@@ -336,6 +347,11 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
 	if (response.size() >0 && respLen > 0)
 	{
+		if (m_resp)
+		{
+			delete m_resp;
+			m_resp = 0;
+		}
 		m_resp = new char[response.size() * BUFFER_SIZE + 16];
 		char* ptr = m_resp;
 		m_respLen = respLen;

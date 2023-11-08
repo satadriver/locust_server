@@ -87,6 +87,9 @@
     <ClCompile Include="dlgUpload.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="dlgRename.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileHelper.h">
@@ -150,6 +153,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="dlgUpload.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dlgRename.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

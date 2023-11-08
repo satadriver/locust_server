@@ -6,21 +6,27 @@
 #include <iostream>
 #include "resource.h"
 #include "dlgCmd.h"
-
+#include "dialog.h"
 #include "public.h"
 #include "mission.h"
 #include "packet.h"
 #include "FileHelper.h"
+#include "dlgrename.h"
+
+#include <map>
+#include "utils.h"
 
 using namespace std;
 
 
 DialogFiles* g_dlgFile = 0;
 
+map<string , vector<string> > g_mapDir;
+
+
 DialogFiles::DialogFiles() {
 
 }
-
 
 DialogFiles::DialogFiles(string id) {
 	m_id = id;
@@ -33,6 +39,24 @@ DialogFiles::~DialogFiles() {
 		delete g_dlgFile;
 		g_dlgFile = 0;
 	}
+	if (g_mapDir.size())
+	{
+		g_mapDir.clear();
+	}
+}
+
+string DialogFiles::setPath(string path) {
+	m_dir = path;
+	return m_dir;
+}
+
+string DialogFiles::getPath() {
+	string path = m_dir;
+	if (path.back() != '\\')
+	{
+		path = path + "\\";
+	}
+	return path;
 }
 
 
@@ -77,62 +101,116 @@ int __stdcall getDrive(CMD_PARAMS* params) {
 	string id = params->id;
 	delete params;
 
-	PacketParcel packet(TRUE, id);
-
-	char* buf = buildCmd(0, 0, MISSION_TYPE_DRIVE);
-
-	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, 0 + sizeof(MY_CMD_PACKET));
-
-	delete buf;
-
-	char* data = packet.getbuf();
-	int datasize = packet.getbufsize();
-	if (datasize <= 4 && *(DWORD*)data != DATA_PACK_TAG) {
-		return FALSE;
-	}
-
-	int wait_cnt = 100;
-	while (wait_cnt)
+	std::map<string, vector<string>>::iterator it = g_mapDir.find(id);
+	if (it == g_mapDir.end())
 	{
-		ret = packet.postCmd(CMD_GET_DRIVER, 0, 0);
-		data = packet.getbuf();
-		datasize = packet.getbufsize();
-		if (datasize == 4 && *(INT*)data == DATA_PACK_TAG )
-		{
-			Sleep(g_interval);
-			continue;
+
+		PacketParcel packet(TRUE, id);
+
+		char* buf = buildCmd(0, 0, MISSION_TYPE_DRIVE);
+
+		ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, 0 + sizeof(MY_CMD_PACKET));
+
+		delete buf;
+
+		char* data = packet.getbuf();
+		int datasize = packet.getbufsize();
+		if (datasize <= 4 && *(DWORD*)data != DATA_PACK_TAG) {
+			return FALSE;
 		}
-		else if (datasize > 4 && memcmp(data,CMD_SEND_DRIVER,lstrlenA(CMD_SEND_DRIVER))==0) {
-			break;
-		}
-		else if (datasize == 4  && *(INT*)data == INVALID_RESPONSE)
+
+		int wait_cnt = 100;
+		while (wait_cnt)
 		{
-			Sleep(g_interval);
-			wait_cnt--;
-			if (wait_cnt == 0)
-			{			
+			ret = packet.postCmd(CMD_GET_DRIVER, 0, 0);
+			data = packet.getbuf();
+			datasize = packet.getbufsize();
+			if (datasize == 4 && *(INT*)data == DATA_PACK_TAG)
+			{
+				Sleep(g_interval);
+				continue;
+			}
+			else if (datasize > 4 && memcmp(data, CMD_SEND_DRIVER, lstrlenA(CMD_SEND_DRIVER)) == 0) {
+				break;
+			}
+			else if (datasize == 4 && *(INT*)data == INVALID_RESPONSE)
+			{
+				Sleep(g_interval);
+				wait_cnt--;
+				if (wait_cnt == 0)
+				{
+					return FALSE;
+				}
+			}
+			else {
 				return FALSE;
 			}
 		}
-		else {
-			return FALSE;
-		}
-	}
-	MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + 4);
-	int reslen = inpack->len;
-	char* resdata = data + 4 + sizeof(MY_CMD_PACKET);
-	*(resdata + reslen) = 0;
+		MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + 4);
+		int reslen = inpack->len;
+		char* resdata = data + 4 + sizeof(MY_CMD_PACKET);
+		*(resdata + reslen) = 0;
 
-	HWND hwnd = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST4);
-	int cnt = reslen / 4;
-	for (int i = 0; i < cnt; i++)
-	{
-		ret = SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)(resdata + (size_t)i * 4)) ;
+		HWND hwnd = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST4);
+		int cnt = reslen / 4;
+		vector<string > drives;
+		for (int i = 0; i < cnt; i++)
+		{
+			string drive = resdata + (size_t)i * 4;
+
+			ret = SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)(drive.c_str()));
+
+			drives.push_back(drive);
+		}
+
+		pair<string, vector<string> > mp = { id,drives };
+		g_mapDir.insert(mp);
+	}
+	else {
+		HWND hwnd = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST4);
+		for (int i = 0;i < it->second.size();i ++)
+		{
+			string drive = it->second[i];
+			ret = SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)(drive.c_str()));	
+		}
 	}
 
 	return 0;
 }
 
+
+
+
+int __stdcall delFile(CMD_PARAMS* params) {
+
+	int ret = 0;
+
+	string id = params->id;
+	string path = params->cmd;
+
+	delete params;
+
+	path = g_dlgFile->getPath() + path;
+
+	PacketParcel packet(TRUE, id);
+
+	char* buf = buildCmd(path.c_str(), path.size(), MISSION_TYPE_DELFILE);
+
+	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, path.size() + sizeof(MY_CMD_PACKET));
+
+	opLog("object:%s delete file:%s\r\n", id.c_str(), path.c_str());
+
+	delete buf;
+
+	char* data = packet.getbuf();
+	int datasize = packet.getbufsize();
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	{
+		return FALSE;
+	}
+
+	return 0;
+}
 
 int __stdcall getFile(CMD_PARAMS* params) {
 
@@ -144,7 +222,6 @@ int __stdcall getFile(CMD_PARAMS* params) {
 	delete params;
 
 	string curpath = "";
-
 	if (path == ".")
 	{
 		curpath = g_dlgFile->ascent();
@@ -154,16 +231,40 @@ int __stdcall getFile(CMD_PARAMS* params) {
 		return FALSE;
 	}
 	else {
-		curpath = g_dlgFile->descent(path);
+		if (path.size() == 3 && path.c_str()[2] == '\\' && path.c_str()[1] == ':')
+		{
+			curpath = g_dlgFile->setPath(path);
+		}
+		else {
+			curpath = g_dlgFile->descent(path);
+		}	
+	}
+
+	std::map<string, vector<string>>::iterator it = g_mapDir.find(curpath);
+	if (it == g_mapDir.end())
+	{
+		//continue to process in the next;
+	}
+	else {
+		HWND hwnd = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST2);
+		ret = SendMessageA(hwnd, LB_RESETCONTENT, 0, (LPARAM)0);
+		for (int i = 0; i < it->second.size(); i++)
+		{
+			string filename = it->second[i];
+			ret = SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)filename.c_str());
+		}
+
+		g_dlgFile->setPath(curpath);
+		return ret;
 	}
 
 	PacketParcel packet(TRUE,id);
 
-	char* buf = buildCmd(curpath.c_str(), curpath.size(), MISSION_TYPE_DIR);
+	char* bp = buildCmd(curpath.c_str(), curpath.size(), MISSION_TYPE_DIR);
 
-	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, curpath.size() + sizeof(MY_CMD_PACKET));
+	ret = packet.postCmdFile(CMD_SEND_DD_DATA, bp, curpath.size() + sizeof(MY_CMD_PACKET));
 
-	delete buf;
+	delete bp;
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
@@ -214,31 +315,43 @@ int __stdcall getFile(CMD_PARAMS* params) {
 
 		ret = SendMessageA(hwnd, LB_RESETCONTENT, 0, (LPARAM)0);
 
+		vector<string> fns;
+
+		string filename = "";
+
 		for (int i = 0; i < items; i++)
 		{
 			FILE_INFOMATION* fi = (FILE_INFOMATION*)ptr;
 
-			string fn = string(fi->filename, fi->fnlen);
+			filename = string(fi->filename, fi->fnlen);
 
-			char showname[1024];
 			if (fi->type & FILE_ATTRIBUTE_ARCHIVE)
 			{
-				lstrcpyA(showname, fn.c_str());
-				//wsprintfA(showname, "%s%lld", fn.c_str(), fi->size/1024);
-			}else if (fi->type & FILE_ATTRIBUTE_DIRECTORY)
+
+			}
+			else if (fi->type & FILE_ATTRIBUTE_DIRECTORY)
 			{
-				lstrcpyA(showname, fn.c_str());
+
 			}
 
-			ret = SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)showname);
+			ret = SendMessageA(hwnd, LB_ADDSTRING, 0, (LPARAM)filename.c_str());
 
 			ptr = ptr + sizeof(FILE_INFOMATION) - MAX_PATH + fi->fnlen;
-		}
-		g_dlgFile->m_dir = curpath;
 
+			fns.push_back(filename);
+		}
+
+		//in case the curpath = id,how to process ?
+		pair<string, vector<string> > mp = { curpath,fns };
+		g_mapDir.insert(mp);
+
+		g_dlgFile->setPath(curpath);
+		//g_dlgFile->m_dir = curpath;
 	}
 	else if (inpack->type == MISSION_TYPE_FILE)
 	{
+		opLog("object:%s download file:%s\r\n", params->id.c_str(), params->cmd.c_str());
+
 		int filesize = inpack->len;
 		char* filedata = inpack->value;
 		if (filesize)
@@ -252,7 +365,7 @@ int __stdcall getFile(CMD_PARAMS* params) {
 			opfn.lpstrFile = file_name; 
 			opfn.lpstrFile[0] = '\0'; //这个缓冲的第一个字符必须是NULL
 			opfn.nMaxFile = sizeof(file_name);
-			opfn.Flags = 0;  //OFN_FILEMUSTEXIST OFN_PATHMUSTEXIST指定用户仅可以在文件名登录字段中输入已存在的文件的名字。	
+			opfn.Flags = 0;			//OFN_FILEMUSTEXIST OFN_PATHMUSTEXIST指定用户仅可以在文件名登录字段中输入已存在的文件的名字。	
 			ret = GetOpenFileNameA(&opfn);
 			if (ret)
 			{
@@ -288,9 +401,35 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			CMD_PARAMS *params = new CMD_PARAMS;
 			params->id = g_dlgFile->m_id;
 			int ret = getDrive(params);
-
 		}
-		else if ((wl == IDC_LIST2) && ((wh) == LBN_SELCHANGE))
+		else if (wl == IDM_DEL_FILE)
+		{
+			char data[0x1000];
+			HWND list = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST2);
+			DWORD dwSel = SendMessage(list, LB_GETCURSEL, 0, 0);
+
+			int len = SendMessageA(list, LB_GETTEXT, dwSel, (LPARAM)data);
+
+			CMD_PARAMS* params = new CMD_PARAMS;
+			params->id = g_dlgFile->m_id;
+			params->cmd = string(data, len);
+			int ret = delFile(params);
+		}
+		else if (wl == IDM_REN_FILE)
+		{
+			char data[0x1000];
+			HWND list = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST2);
+			DWORD dwSel = SendMessage(list, LB_GETCURSEL, 0, 0);
+
+			int len = SendMessageA(list, LB_GETTEXT, dwSel, (LPARAM)data);
+
+			CMD_PARAMS* params = new CMD_PARAMS;
+			params->id = g_dlgFile->m_id;
+			params->cmd = string(data, len);
+
+			int ret = createDlgRename(g_dlgFile->m_hinst, g_dlgFile->m_id, g_dlgFile->m_dir, data);
+		}
+		else if ((wl == IDC_LIST2) && ((wh) == LBN_DBLCLK))
 		{
 			char data[0x1000];
 			HWND list = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST2);
@@ -303,7 +442,7 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			params->cmd = string(data, len);
 			int ret = getFile(params);
 		}
-		else if ((wl == IDC_LIST4) && ((wh) == LBN_SELCHANGE))
+		else if ((wl == IDC_LIST4) && ((wh) == LBN_DBLCLK))
 		{
 			char data[0x1000];
 			HWND list = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST4);
@@ -331,14 +470,15 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 	else if (msg == WM_CLOSE)
 	{
 		EndDialog(hwnd, 0);
+		DestroyWindow(hwnd);
 	}
 	else if (msg == WM_DESTROY)
 	{
-		EndDialog(hwnd, 0);
+		PostQuitMessage(-1);
 	}
 	else if (msg == WM_CHAR)
 	{
-		printf("hello");
+
 	}
 	else if (msg == WM_RBUTTONDOWN)
 	{
@@ -352,6 +492,32 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 }
 
 
+int DialogFiles::rmenu() {
+
+	HMENU menu = LoadMenuA(0, (LPCSTR)IDR_MENU2);
+
+	HMENU sub = GetSubMenu(menu, 0);
+	RECT rect = { 0 };
+
+	POINT pt;
+	GetCursorPos(&pt);
+	TrackPopupMenu(sub, TPM_LEFTBUTTON | TPM_TOPALIGN | TPM_LEFTBUTTON, pt.x, pt.y, 0, m_hwnd, 0);
+
+	return 0;
+}
+
+
+int fileListBoxProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+
+	if (msg == WM_RBUTTONDOWN) {
+
+		int ret = g_dlgFile->rmenu();
+
+		return TRUE;
+	}
+	return CallWindowProcA(g_dlgFile->m_lbProc, hwnd, msg, wparam, lparam);
+}
+
 
 int __stdcall DialogFiles::runDlgFile(DialogFiles* dialog) {
 	int ret = 0;
@@ -364,6 +530,12 @@ int __stdcall DialogFiles::runDlgFile(DialogFiles* dialog) {
 	}
 
 	ret = ShowWindow(dialog->m_hwnd, SW_SHOW);
+
+	HWND hwnd = GetDlgItem(dialog->m_hwnd, IDC_LIST2);
+
+	dialog->m_lbProc = (WNDPROC)GetWindowLongPtrA(hwnd, GWLP_WNDPROC);
+
+	ret = SetWindowLongPtrA(hwnd, GWLP_WNDPROC, (LONG_PTR)fileListBoxProc);
 
 	SendMessageA(dialog->m_hwnd, WM_COMMAND, CMD_UPDATE_DRIVE, 0);
 
@@ -387,7 +559,7 @@ int __stdcall DialogFiles::runDlgFile(DialogFiles* dialog) {
 int createDlgFile(HINSTANCE hinst, string id) {
 	g_dlgFile = new DialogFiles(id);
 	g_dlgFile->m_hinst = hinst;
-	//g_dlgCmd->runDlgCmd(g_dlgCmd);
+
 	HANDLE h = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)g_dlgFile->runDlgFile, g_dlgFile, 0, 0);
 	if (h)
 	{

@@ -11,6 +11,7 @@
 #include "packet.h"
 #include "dlgCmd.h"
 #include "FileHelper.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -92,6 +93,8 @@ int __stdcall uploadFile(CMD_PARAMS* params) {
 	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, packsize);
 	delete buf;
 
+	opLog("object:%s upload file:%s\r\n", params->id.c_str(), params->cmd.c_str());
+
 	char* data = packet.getbuf();
 	size_t datasize = packet.getbufsize();
 	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
@@ -165,14 +168,15 @@ INT_PTR DialogUpload::dlgUploadProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 	else if (msg == WM_CLOSE)
 	{
 		EndDialog(hwnd, 0);
+		DestroyWindow(hwnd);
 	}
 	else if (msg == WM_DESTROY)
 	{
-		EndDialog(hwnd, 0);
+		PostQuitMessage(-1);
 	}
 	else if (msg == WM_CHAR)
 	{
-		printf("hello");
+
 	}
 	else if (msg == WM_RBUTTONDOWN)
 	{
@@ -214,6 +218,7 @@ int __stdcall DialogUpload::runDlgUpload(DialogUpload* dialog) {
 	}
 	return 0;
 }
+
 
 
 int createDlgUpload(HINSTANCE hinst, string id) {

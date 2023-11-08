@@ -53,8 +53,6 @@ public:
 
     virtual bool postTest(string myfile,char * data,int filesize);
 
-
-
     bool getCmd(const char* cmd);
 
     bool getSubCmd(const char* cmd, const char* subcmd);
@@ -63,8 +61,8 @@ public:
 
     int setInnerCmd(char* data, int datalen, int type);
 
-
     bool setUrl(wstring url);
+
 	bool setPort(USHORT port);
 
 	bool setIP(USHORT port);

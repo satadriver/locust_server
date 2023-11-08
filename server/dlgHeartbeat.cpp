@@ -49,6 +49,8 @@ int __stdcall heartbeatRandom(CMD_PARAMS* params) {
 
 	delete buf;
 
+	EndDialog(g_dlgHB->m_hwnd, 0);
+
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
 	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
@@ -87,7 +89,7 @@ INT_PTR DialogHeartbeat::dlgHBProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lp
 				if (ht)
 				{
 					CloseHandle(ht);
-					EndDialog(g_dlgHB->m_hwnd,0);
+					
 				}
 			}
 		}
@@ -106,14 +108,14 @@ INT_PTR DialogHeartbeat::dlgHBProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lp
 	else if (msg == WM_CLOSE)
 	{
 		EndDialog(hwnd, 0);
+		DestroyWindow(hwnd);
 	}
 	else if (msg == WM_DESTROY)
 	{
-		EndDialog(hwnd, 0);
+		PostQuitMessage(-1);
 	}
 	else if (msg == WM_CHAR)
 	{
-		printf("hello");
 	}
 	else if (msg == WM_RBUTTONDOWN)
 	{

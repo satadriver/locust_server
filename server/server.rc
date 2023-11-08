@@ -112,6 +112,16 @@ BEGIN
     EDITTEXT        IDC_EDIT5,78,47,385,14,ES_AUTOHSCROLL
 END
 
+IDD_DIALOG6 DIALOGEX 0, 0, 356, 92
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "修改文件名称"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,290,63,50,14
+    EDITTEXT        IDC_EDIT1,16,40,325,14,ES_AUTOHSCROLL
+    LTEXT           "新文件名称：",IDC_STATIC,18,16,58,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -168,6 +178,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 99
     END
+
+    IDD_DIALOG6, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 349
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 85
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -207,6 +225,11 @@ BEGIN
     0
 END
 
+IDD_DIALOG6 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -230,11 +253,9 @@ IDR_MENU2 MENU
 BEGIN
     POPUP "test"
     BEGIN
-        MENUITEM "haha",                        ID_TEST_HAHA
-        MENUITEM "hi",                          ID_TEST_HI
-        MENUITEM "hello",                       ID_TEST_HELLO
+        MENUITEM "删除文件",                        IDM_DEL_FILE
+        MENUITEM "重命名文件",                       IDM_REN_FILE
     END
-    MENUITEM "hello",                       0
 END
 
 #endif    // 中文(简体，中国) resources

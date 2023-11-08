@@ -180,8 +180,7 @@ public:
 
 	int cmdWrapper(char* data, int size, const char* cmd, const char* subcmd, char** out, int* outisize);
 
-	int cmdDataWrapper(char* data, int size, const char* cmd, const char* fn,char** out, int* outisize);
-
+	int cmdDataWrapper(char* data, int size, const char* cmd, const char* subdata,int subsize,char** out, int* outisize);
 
 	virtual bool postFile(string filename);
 
@@ -203,4 +202,8 @@ protected:
 	HttpsProto* m_protocol;
 
 	string m_userid;
+
+	char* m_data;
+
+	int m_datalen;
 };

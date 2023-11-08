@@ -9,6 +9,7 @@
 #define IDD_DIALOG4                     112
 #define IDD_DIALOG5                     114
 #define IDR_MENU2                       120
+#define IDD_DIALOG6                     121
 #define IDR_MENU1                       205
 #define IDC_LIST1                       1001
 #define IDC_LIST2                       1002
@@ -27,15 +28,15 @@
 #define IDM_DELETE                      40004
 #define IDM_ONLINE_INFO                 40005
 #define IDM_ONLINE_RANDOM               40006
-#define ID_TEST_HAHA                    40011
-#define ID_TEST_HI                      40012
-#define ID_TEST_HELLO                   40013
+#define IDM_DEL_FILE                    40011
+#define IDM_REN_FILE                    40012
+
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_RESOURCE_VALUE        123
 #define _APS_NEXT_COMMAND_VALUE         40014
 #define _APS_NEXT_CONTROL_VALUE         1300
 #define _APS_NEXT_SYMED_VALUE           210

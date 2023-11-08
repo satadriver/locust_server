@@ -17,6 +17,8 @@
 #include "dlgHeartbeat.h"
 #include "dlgOnline.h"
 #include "dlgUpload.h"
+#include "FileHelper.h"
+
 
 using namespace std;
 
@@ -24,17 +26,17 @@ using namespace std;
 MyDialog * g_mydialog = 0;
 
 
-
-void CALLBACK timerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
-{
-	g_mydialog->showObjects();
-}
-
-
 MyDialog::MyDialog() {
 
+}
 
+MyDialog::~MyDialog() {
+	if (g_mydialog) {
+		delete g_mydialog;
+		g_mydialog = 0;
+	}
 
+	KillTimer(0, m_clock);
 }
 
 
@@ -58,14 +60,11 @@ string MyDialog::getFeild(const char * str,const char * key) {
 }
 
 
-MyDialog::~MyDialog() {
-	if (g_mydialog) {
-		delete g_mydialog;
-		g_mydialog = 0;
-	}
-
-	KillTimer(0, m_clock);
+void CALLBACK timerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+{
+	g_mydialog->updateObjects();
 }
+
 
 
 int MyDialog::menu() {
@@ -90,7 +89,7 @@ int MyDialog::rmenu() {
 }
 
 
-int listboxProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+int dlgListboxProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 	if (msg == WM_RBUTTONDOWN) {
 
@@ -101,7 +100,8 @@ int listboxProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return CallWindowProcA(g_mydialog->m_listboxProc, hwnd, msg, wparam, lparam);
 }
 
-int __stdcall MyDialog::ruDialog(MyDialog* dialog) {
+
+int __stdcall MyDialog::runDialog(MyDialog* dialog) {
 	int ret = 0;
 
 	dialog->m_hwnd = CreateDialogA(dialog->m_hinst, (LPCSTR)IDC_DLG1, 0, (DLGPROC)dlgProc, 0);
@@ -117,7 +117,7 @@ int __stdcall MyDialog::ruDialog(MyDialog* dialog) {
 
 	dialog->m_listboxProc = (WNDPROC)GetWindowLongPtrA(hwnd, GWLP_WNDPROC);
 
-	ret = SetWindowLongPtrA(hwnd, GWLP_WNDPROC,(LONG_PTR) listboxProc);
+	ret = SetWindowLongPtrA(hwnd, GWLP_WNDPROC,(LONG_PTR)dlgListboxProc);
 
 	ret = SendMessageA(dialog->m_hwnd, WM_COMMAND, CMD_UPDATE_HOSTS, 0);
 
@@ -140,25 +140,7 @@ int __stdcall MyDialog::ruDialog(MyDialog* dialog) {
 
 
 
-
-int createDialog(HINSTANCE hinstance) {
-	g_mydialog = new MyDialog();
-	g_mydialog->m_hinst = hinstance;
-
-	HANDLE h = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)g_mydialog->ruDialog, g_mydialog, 0, 0);
-	if (h)
-	{
-		CloseHandle(h);
-	}
-	return TRUE;
-}
-
-
-
-
-
-
-INT __stdcall deleteObj(CMD_PARAMS * params) {
+INT __stdcall deleteObject(CMD_PARAMS * params) {
 
 	int ret = 0;
 
@@ -167,7 +149,7 @@ INT __stdcall deleteObj(CMD_PARAMS * params) {
 
 	delete params;
 
-	ret = MessageBoxA(0, "您确实要删除目标吗?", "删除目标", MB_OKCANCEL);
+	ret = MessageBoxA(0, "would u want to delete this object?", "delete object", MB_OKCANCEL);
 	if (ret == IDOK)
 	{
 		PacketParcel packet(TRUE, id);
@@ -195,11 +177,55 @@ INT __stdcall deleteObj(CMD_PARAMS * params) {
 }
 
 
+int removeRepitition(vector<CLIENT_INFO> & v) {
+
+	int ll = v.size();
+	for (int i = 0;i < ll-1;i ++)
+	{
+		for (int j = 0;j < ll - 1;j++)
+		{
+			if (v.size()>= 2 && v[j].host == v[j+1].host)
+			{
+				v[j + 1].tag = FALSE;
+			}
+		}
+		ll--;
+	}
+
+	for (int j = 0; j < v.size(); )
+	{
+		if (v[j].tag == FALSE)
+		{
+			v.erase(v.begin() + j);
+		}
+		else {
+			j++;
+		}
+	}
+	
+	return 0;
+}
 
 
+int writeObjects(vector<CLIENT_INFO> hosts) {
+
+	int ret = 0;
+	char info[1024];
+	
+	for (int i = 0;i < hosts.size(); i ++)
+	{
+		string filename = hosts[i].host + "." + LOCAL_OBJECTS_FILENAME;
+
+		int len = wsprintfA(info, OBJECT_INFO_FORAMT, hosts[i].host.c_str(), hosts[i].ip.c_str(), hosts[i].date.c_str());
+		lstrcatA(info, "\r\n");
+		ret = FileHelper::fileWriter(filename.c_str(), info, len + 2, FILE_WRITE_CHECK);
+	}
+
+	return hosts.size();
+}
 
 
-int MyDialog::showObjects() {
+int MyDialog::updateObjects() {
 
 	int ret = 0;
 
@@ -229,7 +255,6 @@ int MyDialog::showObjects() {
 		}
 	}
 
-
 	PacketParcel packet(TRUE);
 
 	ret = packet.postAllCmd(CMD_GETHOST, GETHOST_ALLH);
@@ -242,14 +267,20 @@ int MyDialog::showObjects() {
 	}
 
 	vector<CLIENT_INFO>hosts_all = parseHosts(data + 4, datasize - 8);
+	removeRepitition(hosts_all);
+	writeObjects(hosts_all);
 
 	ret = packet.postAllCmd(CMD_GETHOST, GETHOST_LIVE);
+	data = packet.getbuf();
+	datasize = packet.getbufsize();
 	if (datasize <= 8 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
 	{
 		return FALSE;
 	}
 
 	vector<CLIENT_INFO>hosts_live = parseHosts(data + 4, datasize-8);
+	removeRepitition(hosts_live);
+	writeObjects(hosts_live);
 
 	char info[1024];
 
@@ -290,10 +321,8 @@ int MyDialog::showObjects() {
 					wsprintfA(info, ONLINE_FORAMT, hosts_live[i].host.c_str(), hosts_live[i].ip.c_str(), hosts_live[i].date.c_str(),
 						ONLINE_KEYVALUE_STATUS_ALIVE);
 					ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)info);
-
 					
 				}
-
 			}
 		}
 	}
@@ -354,7 +383,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		int lh = lparam >> 16;
 		if (wl == CMD_UPDATE_HOSTS)
 		{
-			g_mydialog->showObjects();
+			g_mydialog->updateObjects();
 		}
 		else if (wparam == IDM_OPER_FILE)
 		{
@@ -409,7 +438,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 				if (ret) {
 					CMD_PARAMS* params = new CMD_PARAMS;
 					params->id = g_mydialog->getFeild(data, ONLINE_KEYNAME_ID);
-					int ret = deleteObj(params);
+					int ret = deleteObject(params);
 				}
 			}
 		}
@@ -465,15 +494,15 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		{
 			int ret = SetTextColor(hdc, 0xff00);
 		}
-		printf("hello");
 	}
 	else if (msg == WM_CLOSE)
 	{
 		EndDialog(hwnd, 0);
+		DestroyWindow(hwnd);
 	}
 	else if (msg == WM_DESTROY)
 	{
-		EndDialog(hwnd, 0);
+		PostQuitMessage(-1);
 	}
 	else if (msg == WM_CHAR)
 	{
@@ -491,3 +520,15 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 }
 
 
+int createDialog(HINSTANCE hinstance) {
+	g_mydialog = new MyDialog();
+	g_mydialog->m_hinst = hinstance;
+
+	int ret = g_mydialog->runDialog(g_mydialog);
+// 	HANDLE h = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)g_mydialog->runDialog, g_mydialog, 0, 0);
+// 	if (h)
+// 	{
+// 		CloseHandle(h);
+// 	}
+	return TRUE;
+}

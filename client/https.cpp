@@ -226,7 +226,6 @@ bool HttpsProto::httpRequest(void* data, unsigned long datasize, char* response,
 			ret = WinHttpQueryDataAvailable(hRequest, &dwSize);
 			if (dwSize == 0)
 			{
-				mylog("Error %u in WinHttpQueryDataAvailable.\n",GetLastError());
 				break;
 			}
 
@@ -252,7 +251,7 @@ bool HttpsProto::httpRequest(void* data, unsigned long datasize, char* response,
 	}
 
 	if (!bResults) {
-		mylog("Error %d has occurred.\n", GetLastError());
+		mylog("%s:%s error code:%d\r\n",__FILE__,__FUNCTION__, GetLastError());
 	}
 
 	WinHttpSetStatusCallback(hSession,NULL,WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,NULL);

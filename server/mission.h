@@ -22,6 +22,10 @@ using namespace std;
 #define COMMAND_TYPE_SHELLCODE	7
 #define COMMAND_TYPE_HEARTBEAT	8
 
+#define MISSION_TYPE_RUN		9
+#define MISSION_TYPE_DELFILE	10
+#define MISSION_TYPE_RENFILE	11
+
 #define MISSION_ETEM_SIZE		1024
 
 #define FILEMISSION_FILENAME		"fileMission.dat"

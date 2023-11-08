@@ -9,6 +9,9 @@
 
 #include <windows.h>
 #include <iostream>
+#include <vector>
+#include "dlgCmd.h"
+#include "command.h"
 
 using namespace std;
 
@@ -33,5 +36,8 @@ public:
 	string m_id;
 };
 
+int __stdcall onlineInfo(CMD_PARAMS* params);
 
 int createDlgOnline(HINSTANCE, string id);
+
+vector<CLIENT_INFO> getOnlineInfo(const char* data, int size);

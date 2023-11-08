@@ -145,6 +145,7 @@
     <ClCompile Include="dlgCmd.cpp" />
     <ClCompile Include="dlgFiles.cpp" />
     <ClCompile Include="dlgOnline.cpp" />
+    <ClCompile Include="dlgRename.cpp" />
     <ClCompile Include="dlgUpload.cpp" />
     <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="dlgHeartbeat.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="dlgFiles.h" />
     <ClInclude Include="dlgHeartbeat.h" />
     <ClInclude Include="dlgOnline.h" />
+    <ClInclude Include="dlgRename.h" />
     <ClInclude Include="dlgUpload.h" />
     <ClInclude Include="FileHelper.h" />
     <ClInclude Include="http.h" />

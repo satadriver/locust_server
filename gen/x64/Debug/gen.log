@@ -1,0 +1,7 @@
+﻿  dialog.cpp
+C:\Users\ljg\locust_server\gen\dialog.cpp(88,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+C:\Users\ljg\locust_server\gen\dialog.cpp(130,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\gen\dialog.cpp(132,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\gen\dialog.cpp(194,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\gen\dialog.cpp(196,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+  gen.vcxproj -> C:\Users\ljg\locust_server\locust\x64\Debug\gen.exe
