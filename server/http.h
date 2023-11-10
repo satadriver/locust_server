@@ -59,7 +59,7 @@ public:
 
     bool getCmdStr(const char* cmd, const char* str);
 
-    int setInnerCmd(char* data, int datalen, int type);
+
 
     bool setUrl(wstring url);
 

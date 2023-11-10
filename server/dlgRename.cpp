@@ -42,8 +42,8 @@ DialogRename::DialogRename(string id,string path,string srcfn) {
 DialogRename::~DialogRename() {
 	if (g_dlgRename)
 	{
-		delete g_dlgRename;
-		g_dlgRename = 0;
+// 		delete g_dlgRename;
+// 		g_dlgRename = 0;
 	}
 }
 
@@ -60,23 +60,22 @@ int __stdcall dlgRenameFile(CMD_PARAMS* params) {
 
 	PacketParcel packet(TRUE, id);
 
-	char* buf = buildCmd2(path.c_str(), path.size(), MISSION_TYPE_RENFILE, newpath.c_str(), newpath.size(), MISSION_TYPE_RENFILE);
+	char* buf = buildCmd2(path.c_str(), path.size(), MISSION_TYPE_RENFILE, newpath.c_str(), newpath.size());
 	int packsize = sizeof(MY_CMD_PACKET) + sizeof(MY_CMD_PACKET) + newpath.size() + path.size();
-	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, packsize);
+	ret = packet.postCmdFile(CMD_BRING_COMMAND, buf, packsize);
 
-
-	opLog("object:%s rename file:%s\r\n", params->id.c_str(), params->cmd.c_str());
+	opLog("object:%s rename file:%s to file:%s\r\n", id.c_str(), path.c_str(),newpath.c_str());
 
 	delete buf;
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
-	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG )
 	{
 		return FALSE;
 	}
 
-	return 0;
+	return TRUE;
 }
 
 
@@ -172,6 +171,12 @@ int __stdcall DialogRename::runDlgRename(DialogRename* dialog) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+	}
+
+	if (g_dlgRename)
+	{
+		delete g_dlgRename;
+		g_dlgRename = 0;
 	}
 	return 0;
 }

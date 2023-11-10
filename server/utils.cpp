@@ -326,7 +326,7 @@ int binarySearch(const char* data, int size, const char* tag, int tagsize) {
 
 
 int xor_crypt(char* data, int len) {
-	//return TRUE;
+	return TRUE;
 
 	const char* key = "fuck crackers who want to crack this program!";
 	int keylen = lstrlenA(key);

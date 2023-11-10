@@ -22,13 +22,28 @@ MyDialog::MyDialog() {
 }
 
 MyDialog::~MyDialog() {
-	if (g_mydialog) {
-		delete g_mydialog;
-		g_mydialog = 0;
-	}
+
 }
 
-
+string selectFileName() {
+	int ret = 0;
+	OPENFILENAMEA opfn = { 0 };
+	CHAR file_name[0x1000];
+	opfn.lStructSize = sizeof(OPENFILENAMEA);
+	opfn.lpstrFilter = "所有文件\0*.*\0\0";
+	//指向一对以空字符结束的过滤字符串的一个缓冲。缓冲中的最后一个字符串必须以两个  NULL字符结束。
+	opfn.nFilterIndex = 1;    //指定在文件类型控件中当前选择的过滤器的索引
+	opfn.lpstrFile = file_name;
+	opfn.lpstrFile[0] = '\0'; //这个缓冲的第一个字符必须是NULL
+	opfn.nMaxFile = sizeof(file_name);
+	opfn.Flags = 0;  //OFN_FILEMUSTEXIST OFN_PATHMUSTEXIST指定用户仅可以在文件名登录字段中输入已存在的文件的名字。	
+	ret = GetOpenFileNameA(&opfn);
+	if (ret)
+	{
+		return string(file_name);
+	}
+	return "";
+}
 
 int writeFileWithParams(char * ip,char * hbi,char * uploadsize,char * path,int bhttps) {
 
@@ -114,6 +129,12 @@ int __stdcall MyDialog::runDialog(MyDialog* dialog) {
 			//DispatchMessage(&msg);
 		}
 	}
+
+	if (g_mydialog) {
+		delete g_mydialog;
+		g_mydialog = 0;
+	}
+
 	return 0;
 }
 
@@ -134,58 +155,70 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		{
 			int ret = 0;
 			int len = 0;
-			char szip[256];
-			len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT1, szip, sizeof(szip));
-			if (len > 0)
+			char fn[1024] = { 0 };
+			ret = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT5, fn,sizeof(fn));
+			if (fn[0] )
 			{
-				char szhbi[256];
-				len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT3, szhbi, sizeof(szhbi));
+				char szip[256];
+				len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT1, szip, sizeof(szip));
 				if (len > 0)
 				{
+					char szhbi[256];
+					len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT3, szhbi, sizeof(szhbi));
+					if (len > 0)
+					{
+					}
+					else {
+						wsprintfA(szhbi, "%d", HEART_BEAT_INTERVAL);
+						//MessageBoxA(0, "error:heart beat is null", "error:heart beat is null", MB_OK);
+					}
+
+					char szfz[256];
+					len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT2, szfz, sizeof(szfz));
+					if (len > 0)
+					{
+
+					}
+					else {
+						wsprintfA(szfz, "%d", MAX_UPLOAD_FILESIZE);
+						//MessageBoxA(0, "error:filesize is null", "error:filesize is null", MB_OK);
+					}
+
+					char szdir[1024];
+					len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT4, szdir, sizeof(szdir));
+					if (len > 0)
+					{
+
+					}
+					else {
+						//MessageBoxA(0, "error:path is null", "error:path is null", MB_OK);
+					}
+
+					int https = IsDlgButtonChecked(g_mydialog->m_hwnd, IDC_CHECK1);
+
+					ret = writeFileWithParams(szip, szhbi, szfz, szdir, https);
+					if (ret == 0)
+					{
+						char info[1024];
+						wsprintfA(info, "Write File error:%d", GetLastError());
+						MessageBoxA(0, info, info, MB_OK);
+					}
+					else {
+
+					}
 				}
 				else {
-					wsprintfA(szhbi, "%d", HEART_BEAT_INTERVAL);
-					//MessageBoxA(0, "error:heart beat is null", "error:heart beat is null", MB_OK);
-				}
-
-				char szfz[256];
-				len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT2, szfz, sizeof(szfz));
-				if (len > 0)
-				{
-
-				}
-				else {
-					wsprintfA(szfz, "%d", MAX_UPLOAD_FILESIZE);
-					//MessageBoxA(0, "error:filesize is null", "error:filesize is null", MB_OK);
-				}
-
-				char szdir[1024];
-				len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT4, szdir, sizeof(szdir));
-				if (len > 0)
-				{
-
-				}
-				else {
-					//MessageBoxA(0, "error:path is null", "error:path is null", MB_OK);
-				}
-
-				int https = IsDlgButtonChecked(g_mydialog->m_hwnd, IDC_CHECK1);
-
-				ret = writeFileWithParams(szip, szhbi, szfz, szdir, https);
-				if (ret == 0)
-				{
-					char info[1024];
-					wsprintfA(info, "Write File error:%d", GetLastError());
-					MessageBoxA(0, info, info, MB_OK);
-				}
-				else {
-
+					MessageBoxA(0, "error:server ip is null", "error:server ip is null", MB_OK);
 				}
 			}
 			else {
-				MessageBoxA(0, "error:server ip is null", "error:server ip is null", MB_OK);
+				MessageBoxA(0, "error:no file selected", "error:no file selected", MB_OK);
 			}
+		}else if (wparam == IDC_BUTTON1)
+		{
+			string fn = selectFileName();
 
+			int ret = SetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT5, fn.c_str());
 		}
 	}
 	else if (msg == WM_SYSCOMMAND)

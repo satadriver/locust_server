@@ -536,12 +536,3 @@ bool HttpProto::getSubCmd(const char* cmd, const char* subcmd) {
 
 
 
-int HttpProto::setInnerCmd(char* data, int datalen, int type) {
-
-    m_inCmd = new char[datalen + sizeof(MY_CMD_PACKET) + 16];
-	MY_CMD_PACKET* mypack = (MY_CMD_PACKET*)m_inCmd;
-	mypack->len = datalen;
-	mypack->type = type;
-	memcpy(mypack->value, data, datalen);
-    return 0;
-}

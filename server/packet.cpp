@@ -83,11 +83,14 @@ int PacketParcel::fileWrapper(const char* filename, char** data, int* datasize) 
 
 	PACKET_HEADER* hdr = (PACKET_HEADER*)(*data);
 	hdr->tag = DATA_PACK_TAG;
-	memcpy(hdr->cmd, CMD_CREATE_FILE, sizeof(hdr->cmd));
+	memcpy(hdr->hdr.cmd, CMD_CREATE_FILE, sizeof(hdr->hdr.cmd));
 
 	int uuid_len = m_userid.size();
-	hdr->hostname_len = uuid_len;
-	memcpy(hdr->hostname, m_userid.c_str(), m_userid.size());
+	hdr->hdr.hostname_len = uuid_len;
+	memcpy(hdr->hdr.hostname, m_userid.c_str(), m_userid.size());
+
+	hdr->hdr.hostname2_len = g_uuid_len;
+	memcpy(hdr->hdr.hostname2, g_uuid, g_uuid_len);
 
 	int offset = sizeof(PACKET_HEADER);
 
@@ -119,14 +122,21 @@ int PacketParcel::cmdWrapper(char * data,int size,const char * cmd,char **out,in
 	{
 		int bufsize = size + sizeof(PACKET_HEADER) + sizeof(DATA_PACK_TAG);
 		*out = new char[bufsize];
+		if (*out == 0)
+		{
+			return FALSE;
+		}
 	}
 	PACKET_HEADER* hdr = (PACKET_HEADER*)(*out);
 	hdr->tag = DATA_PACK_TAG;
-	memcpy(hdr->cmd, cmd, sizeof(hdr->cmd));
+	memcpy(hdr->hdr.cmd, cmd, sizeof(hdr->hdr.cmd));
 
 	int uuid_len = m_userid.size();
-	hdr->hostname_len = uuid_len;
-	memcpy(hdr->hostname,  m_userid.c_str(), m_userid.size());
+	hdr->hdr.hostname_len = uuid_len;
+	memcpy(hdr->hdr.hostname,  m_userid.c_str(), m_userid.size());
+
+	hdr->hdr.hostname2_len = g_uuid_len;
+	memcpy(hdr->hdr.hostname2, g_uuid, g_uuid_len);
 
 	int offset = sizeof(PACKET_HEADER);
 
@@ -145,7 +155,7 @@ int PacketParcel::cmdWrapper(char * data,int size,const char * cmd,char **out,in
 }
 
 
-int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char * subcmd,char** out, int* outisize) {
+int PacketParcel::cmdWrapper(const char* cmd, const char * subcmd,char** out, int* outisize) {
 	if (out == 0)
 	{
 		return FALSE;
@@ -153,7 +163,7 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 
 	if (*out == 0)
 	{
-		int bufsize = size + sizeof(ALLHOSTS_HEADER) + sizeof(DATA_PACK_TAG);
+		int bufsize =  sizeof(ALLHOSTS_HEADER) + sizeof(DATA_PACK_TAG);
 		*out = new char[bufsize];
 	}
 	ALLHOSTS_HEADER* hdr = (ALLHOSTS_HEADER*)(*out);
@@ -164,12 +174,6 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 
 	int offset = sizeof(ALLHOSTS_HEADER);
 
-	if (data && size)
-	{
-		memcpy(*out + offset, data, size);
-		offset += size;
-	}
-
 	*outisize = offset;
 
 	return TRUE;
@@ -178,44 +182,7 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 
 
 
-int PacketParcel::cmdDataWrapper(char* data, int size, const char* cmd,const char * subdata,int subsize, char** out, int* outisize) {
-	if (out == 0)
-	{
-		return FALSE;
-	}
 
-	if (*out == 0)
-	{
-		int bufsize = size + sizeof(PACKET_DATA_HEADER) + sizeof(DATA_PACK_TAG) + subsize + sizeof(int);
-		*out = new char[bufsize];
-	}
-	PACKET_DATA_HEADER* pack = (PACKET_DATA_HEADER*)(*out);
-	pack->hdr.tag = DATA_PACK_TAG;
-
-	memcpy(pack->hdr.cmd, cmd, sizeof(pack->hdr.cmd));
-
-	int uuid_len = m_userid.size();
-	pack->hdr.hostname_len = uuid_len;
-	memcpy(pack->hdr.hostname, m_userid.c_str(), m_userid.size());
-
-	pack->filename_len = subsize;
-	memcpy((char*)pack->filename, subdata,subsize);
-
-	int offset = sizeof(PACKET_DATA_HEADER) + subsize;
-
-	if (data && size)
-	{
-		memcpy(*out + offset, data, size);
-		offset += size;
-	}
-
-	*(DWORD*)(*out + offset) = DATA_PACK_TAG;
-	offset += sizeof(DATA_PACK_TAG);
-
-	*outisize = offset;
-
-	return TRUE;
-}
 
 
 bool PacketParcel::postCmd(const char* cmd, char* data, int datasize) {
@@ -246,7 +213,7 @@ bool PacketParcel::postAllCmd(const char* cmd, const char* subcmd) {
 	int datasize = 0;
 	int ret = 0;
 
-	ret = cmdWrapper(0, 0, cmd, subcmd, &data, &datasize);
+	ret = cmdWrapper( cmd, subcmd, &data, &datasize);
 	if (ret)
 	{
 		ret = m_protocol->httpRequest(data, datasize);
@@ -271,7 +238,7 @@ bool PacketParcel::postCmdFile(const char* cmd, const char* data, int datasize) 
 	int packsize = 0;
 	int ret = 0;
 
-	ret = cmdDataWrapper((char*)data, datasize, cmd, FILE_CMD_FILENAME,lstrlenA(FILE_CMD_FILENAME), &packet, &packsize);
+	ret = cmdWrapper((char*)data, datasize, cmd,&packet, &packsize);
 	if (ret)
 	{
 		ret = m_protocol->httpRequest(packet, packsize);

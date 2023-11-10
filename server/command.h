@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define FILE_CMD_FILENAME "TransmitFile.dat"
+#define FILE_CMD_FILENAME "FileTransmition.dat"
 
 #pragma pack(1)
 

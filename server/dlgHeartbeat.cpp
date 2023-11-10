@@ -26,8 +26,8 @@ DialogHeartbeat::DialogHeartbeat(string id) {
 DialogHeartbeat::~DialogHeartbeat() {
 	if (g_dlgHB)
 	{
-		delete g_dlgHB;
-		g_dlgHB = 0;
+// 		delete g_dlgHB;
+// 		g_dlgHB = 0;
 	}
 }
 
@@ -45,7 +45,7 @@ int __stdcall heartbeatRandom(CMD_PARAMS* params) {
 
 	char* buf = buildCmd((char*)cmd.c_str(), cmd.size(), COMMAND_TYPE_HEARTBEAT);
 
-	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, cmd.size() + sizeof(MY_CMD_PACKET));
+	ret = packet.postCmdFile(CMD_BRING_COMMAND, buf, cmd.size() + sizeof(MY_CMD_PACKET));
 
 	delete buf;
 
@@ -53,12 +53,12 @@ int __stdcall heartbeatRandom(CMD_PARAMS* params) {
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
-	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG )
 	{
 		return FALSE;
 	}
 
-	return 0;
+	return TRUE;
 }
 
 
@@ -155,6 +155,13 @@ int __stdcall DialogHeartbeat::runDlgHB(DialogHeartbeat* dialog) {
 			DispatchMessage(&msg);
 		}
 	}
+
+	if (g_dlgHB)
+	{
+		delete g_dlgHB;
+		g_dlgHB = 0;
+	}
+
 	return 0;
 }
 

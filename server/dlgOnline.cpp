@@ -31,8 +31,8 @@ DialogOnline::DialogOnline(string id) {
 DialogOnline::~DialogOnline() {
 	if (g_dlgOnline)
 	{
-		delete g_dlgOnline;
-		g_dlgOnline = 0;
+// 		delete g_dlgOnline;
+// 		g_dlgOnline = 0;
 	}
 }
 
@@ -76,43 +76,7 @@ vector<CLIENT_INFO> getOnlineInfo(const char * data,int size) {
 }
 
 
-int __stdcall onlineInfo_old(CMD_PARAMS* params) {
 
-	int ret = 0;
-
-	string id = params->id;
-	string cmd = params->cmd;
-
-	delete params;
-
-	PacketParcel packet(TRUE, id);
-
-	ret = packet.postCmd(CMD_READ_ONLINE, 0,0);
-
-	char* data = packet.getbuf();
-	size_t datasize = packet.getbufsize();
-	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
-	{
-		return FALSE;
-	}
-
-	string stronline = string(data + 4, datasize - 8);
-	vector<CLIENT_INFO> clients = getOnlineInfo(data + 4, datasize - 8);
-	if (clients.size())
-	{
-		HWND list = GetDlgItem(g_dlgOnline->m_hwnd, IDC_LIST3);
-		for (int i = 0;i < clients.size();i ++)
-		{
-			char online[1024];
-
-			wsprintfA(online, "ID:%s,IP:%s,TIME:%s", clients[i].host.c_str(), clients[i].ip.c_str(), clients[i].date.c_str());
-
-			ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)online);
-		}
-	}
-	
-	return 0;
-}
 
 
 
@@ -242,6 +206,13 @@ int __stdcall DialogOnline::runDlgOnline(DialogOnline* dialog) {
 			DispatchMessage(&msg);
 		}
 	}
+
+	if (g_dlgOnline)
+	{
+		delete g_dlgOnline;
+		g_dlgOnline = 0;
+	}
+
 	return 0;
 }
 

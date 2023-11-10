@@ -32,8 +32,8 @@ MyDialog::MyDialog() {
 
 MyDialog::~MyDialog() {
 	if (g_mydialog) {
-		delete g_mydialog;
-		g_mydialog = 0;
+// 		delete g_mydialog;
+// 		g_mydialog = 0;
 	}
 
 	KillTimer(0, m_clock);
@@ -134,6 +134,9 @@ int __stdcall MyDialog::runDialog(MyDialog* dialog) {
 			DispatchMessage(&msg);
 		}
 	}
+
+	delete g_mydialog;
+	g_mydialog = 0;
 	return 0;
 }
 

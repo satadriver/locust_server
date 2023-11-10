@@ -30,8 +30,8 @@ DialogUpload::DialogUpload(string id) {
 DialogUpload::~DialogUpload() {
 	if (g_dlgUpload)
 	{
-		delete g_dlgUpload;
-		g_dlgUpload = 0;
+// 		delete g_dlgUpload;
+// 		g_dlgUpload = 0;
 	}
 }
 
@@ -84,20 +84,20 @@ int __stdcall uploadFile(CMD_PARAMS* params) {
 	{
 		return FALSE;
 	}
-	char* buf = buildCmd2(rfn.c_str(),rfn.size(), MISSION_TYPE_UPLOAD, filedata, filesize, MISSION_TYPE_UPLOAD);
+	char* buf = buildCmd2(rfn.c_str(),rfn.size(), MISSION_TYPE_UPLOAD, filedata, filesize);
 	if (buf == 0)
 	{
 		return FALSE;
 	}
 	int packsize = sizeof(MY_CMD_PACKET) + sizeof(MY_CMD_PACKET) + filesize + rfn.size();
-	ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, packsize);
+	ret = packet.postCmdFile(CMD_BRING_COMMAND, buf, packsize);
 	delete buf;
 
-	opLog("object:%s upload file:%s\r\n", params->id.c_str(), params->cmd.c_str());
+	opLog("object:%s upload file:%s to file:%s\r\n", id.c_str(), lfn.c_str(),rfn.c_str());
 
 	char* data = packet.getbuf();
 	size_t datasize = packet.getbufsize();
-	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG )
 	{
 		return FALSE;
 	}
@@ -105,7 +105,7 @@ int __stdcall uploadFile(CMD_PARAMS* params) {
 // 	string stronline = string(data + 4, datasize - 8);
 // 	HWND list = GetDlgItem(g_dlgUpload->m_hwnd, IDC_LIST3);
 // 	ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)stronline.c_str());
-	return 0;
+	return TRUE;
 }
 
 
@@ -215,6 +215,12 @@ int __stdcall DialogUpload::runDlgUpload(DialogUpload* dialog) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+	}
+
+	if (g_dlgUpload)
+	{
+		delete g_dlgUpload;
+		g_dlgUpload = 0;
 	}
 	return 0;
 }

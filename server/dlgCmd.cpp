@@ -26,8 +26,8 @@ DialogCommand::DialogCommand(string id) {
 DialogCommand::~DialogCommand() {
 	if (g_dlgCmd)
 	{
-		delete g_dlgCmd;
-		g_dlgCmd = 0;
+// 		delete g_dlgCmd;
+// 		g_dlgCmd = 0;
 	}
 }
 
@@ -40,43 +40,49 @@ int __stdcall runcmd(CMD_PARAMS *params) {
 
 	char* buffer = buildCmd(params->cmd.c_str(), params->cmd.size(), MISSION_TYPE_CMD);
 
-	ret = packet.postCmd(CMD_SEND_CMD, (char*)buffer, params->cmd.size() + sizeof(MY_CMD_PACKET));
+	ret = packet.postCmd(CMD_BRING_COMMAND, (char*)buffer, params->cmd.size() + sizeof(MY_CMD_PACKET));
 
 	delete buffer;
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
-
 	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
 	{
 		return FALSE;
 	}
 
-	while (TRUE)
+	int try_cnt = 30;
+	while (try_cnt)
 	{
-		Sleep(g_interval);
+		Sleep(1000);
 
-		ret = packet.postCmd(CMD_GET_CMD_RESULT, 0, 0);
-
+		ret = packet.postCmd(CMD_TAKE_COMMAND_RESULT, 0, 0);
 		data = packet.getbuf();
 		datasize = packet.getbufsize();
-		if (datasize < 4 || memcmp(data , CMD_SEND_CMD_RESULT,4 ) != 0)
+		if (datasize >= 8 && *(INT*)data == DATA_PACK_TAG)
 		{
-			continue;
+			break;
 		}
 		else {
-			break;
+			try_cnt--;
+			continue;;
 		}
 	}
 
-	MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + 4);
-	int reslen = inpack->len;
-	char* resdata = data + 4 + sizeof(MY_CMD_PACKET);
-	*(resdata + reslen) = 0;
-	
-	int len = SetDlgItemTextA(g_dlgCmd->m_hwnd, IDC_EDIT2, resdata);
+	PACKET_HEADER* hdr = (PACKET_HEADER*)data;
+	if (datasize > 8 && memcmp(hdr->hdr.cmd, CMD_PUT_COMMAND_RESULT,lstrlenA(CMD_PUT_COMMAND_RESULT) )== 0)
+	{
+		MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + sizeof(PACKET_HEADER));
+		int reslen = inpack->len;
+		char* resdata = inpack->value;
+		*(resdata + reslen) = 0;
+		if (inpack->type == MISSION_TYPE_FILE)
+		{
+			int len = SetDlgItemTextA(g_dlgCmd->m_hwnd, IDC_EDIT2, resdata);
 
-	opLog("object:%s run cmd:%s\r\n", params->id.c_str(), params->cmd.c_str());
+			opLog("object:%s run cmd:%s\r\n", params->id.c_str(), params->cmd.c_str());
+		}
+	}
 
 	delete params;
 
@@ -177,6 +183,9 @@ int __stdcall DialogCommand::runDlgCmd(DialogCommand * dialog) {
 			DispatchMessage(&msg);
 		}
 	}
+
+	delete g_dlgCmd;
+	g_dlgCmd = 0;
 	return 0;
 }
 
