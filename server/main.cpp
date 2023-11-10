@@ -31,7 +31,7 @@
 using namespace std;
 
 
-char g_program_params[MAX_PATH] = "0123456789abcdef";
+CONST static char g_program_params[MAX_PATH] = "0123456789abcdef";
 
 int init() {
 	int ret = 0;
@@ -58,6 +58,8 @@ int init() {
 		g_ip = params->ip;
 		g_interval = params->hbi * 1000;
 		g_fsize_limit = params->fzLimit*1024*1024;
+
+		runLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
 	}
 	else {
 		g_ip = inet_addr("192.168.231.1");

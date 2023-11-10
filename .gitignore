@@ -14,7 +14,7 @@
 *.VC.db
 *.ipch
 *.pdb
-
+*.idb
 
 # Compiled Dynamic libraries
 *.so

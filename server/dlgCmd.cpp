@@ -46,7 +46,8 @@ int __stdcall runcmd(CMD_PARAMS *params) {
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
-	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	PACKET_HEADER* hdr = (PACKET_HEADER*)data;
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG )
 	{
 		return FALSE;
 	}
@@ -69,7 +70,7 @@ int __stdcall runcmd(CMD_PARAMS *params) {
 		}
 	}
 
-	PACKET_HEADER* hdr = (PACKET_HEADER*)data;
+	hdr = (PACKET_HEADER*)data;
 	if (datasize > 8 && memcmp(hdr->hdr.cmd, CMD_PUT_COMMAND_RESULT,lstrlenA(CMD_PUT_COMMAND_RESULT) )== 0)
 	{
 		MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + sizeof(PACKET_HEADER));

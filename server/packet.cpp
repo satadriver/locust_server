@@ -7,10 +7,13 @@
 #include "command.h"
 #include "https.h"
 #include "utils.h"
+#include "md5.h"
 
 
 PacketParcel::PacketParcel() {
 
+
+	return;
 }
 
 
@@ -32,6 +35,19 @@ PacketParcel::PacketParcel(int bPost) {
 		HttpProto* http = new HttpProto(bPost);
 		m_protocol = (HttpsProto*)http;
 	}
+	if (m_sessionKey[0] == 0)
+	{
+		char sztm[256];
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		int len = wsprintfA(sztm, "%4d%2d%2d%2d%2d%2d%3d",
+			st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+		unsigned char lpmd5[16];
+		md5((unsigned char*)sztm, len, lpmd5);
+		len = hex2str(lpmd5, 16, m_sessionKey, sizeof(m_sessionKey));
+		//memcpy(m_sessionKey, g_uuid, g_uuid_len);
+	}
+
 }
 
 
@@ -49,6 +65,19 @@ PacketParcel::PacketParcel(wchar_t* ip, unsigned short port, wchar_t* app)
 	else {
 		HttpProto* http = new HttpProto(ip, port, app);
 		m_protocol = (HttpsProto*)http;
+	}
+
+	if (m_sessionKey[0] == 0)
+	{
+		char sztm[256];
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		int len = wsprintfA(sztm, "%4d%2d%2d%2d%2d%2d%3d",
+			st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+		unsigned char lpmd5[16];
+		md5((unsigned char*)sztm, len, lpmd5);
+		len = hex2str(lpmd5, 16, m_sessionKey, sizeof(m_sessionKey));
+		//memcpy(m_sessionKey, g_uuid, g_uuid_len);
 	}
 }
 
@@ -89,8 +118,11 @@ int PacketParcel::fileWrapper(const char* filename, char** data, int* datasize) 
 	hdr->hdr.hostname_len = uuid_len;
 	memcpy(hdr->hdr.hostname, m_userid.c_str(), m_userid.size());
 
+	hdr->hdr.hostname2_len = sizeof(m_sessionKey);
+	memcpy(hdr->hdr.hostname2, m_sessionKey, sizeof(m_sessionKey));
+
 	hdr->hdr.hostname2_len = g_uuid_len;
-	memcpy(hdr->hdr.hostname2, g_uuid, g_uuid_len);
+	memcpy(hdr->hdr.hostname2, g_uuid,g_uuid_len);
 
 	int offset = sizeof(PACKET_HEADER);
 
@@ -134,6 +166,9 @@ int PacketParcel::cmdWrapper(char * data,int size,const char * cmd,char **out,in
 	int uuid_len = m_userid.size();
 	hdr->hdr.hostname_len = uuid_len;
 	memcpy(hdr->hdr.hostname,  m_userid.c_str(), m_userid.size());
+
+	hdr->hdr.hostname2_len = sizeof(m_sessionKey);
+	memcpy(hdr->hdr.hostname2, m_sessionKey, sizeof(m_sessionKey));
 
 	hdr->hdr.hostname2_len = g_uuid_len;
 	memcpy(hdr->hdr.hostname2, g_uuid, g_uuid_len);

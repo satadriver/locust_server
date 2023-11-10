@@ -45,15 +45,13 @@ string selectFileName() {
 	return "";
 }
 
-int writeFileWithParams(char * ip,char * hbi,char * uploadsize,char * path,int bhttps) {
+int writeFileWithParams(string filename,char * ip,char * hbi,char * uploadsize,char * path,int bhttps) {
 
 	int ret = 0;
 	char* file = 0;
 	int filesize = 0;
 
-	const char* client_fn = "client.exe";
-
-	ret = FileHelper::fileReader(client_fn, &file, &filesize);
+	ret = FileHelper::fileReader(filename.c_str(), &file, &filesize);
 	if (ret)
 	{
 
@@ -86,7 +84,7 @@ int writeFileWithParams(char * ip,char * hbi,char * uploadsize,char * path,int b
 
 			lstrcpyA(params->path, path);
 
-			ret = FileHelper::fileWriter(client_fn, file, filesize, FILE_WRITE_NEW);
+			ret = FileHelper::fileWriter(filename.c_str(), file, filesize, FILE_WRITE_NEW);
 
 			return ret;
 		}
@@ -163,48 +161,56 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 				len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT1, szip, sizeof(szip));
 				if (len > 0)
 				{
-					char szhbi[256];
-					len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT3, szhbi, sizeof(szhbi));
-					if (len > 0)
+					DWORD ip = inet_addr(szip);
+					if (ip != -1)
 					{
+						char szhbi[256];
+						len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT3, szhbi, sizeof(szhbi));
+						if (len > 0)
+						{
+						}
+						else {
+							wsprintfA(szhbi, "%d", HEART_BEAT_INTERVAL);
+							//MessageBoxA(0, "error:heart beat is null", "error:heart beat is null", MB_OK);
+						}
+
+						char szfz[256];
+						len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT2, szfz, sizeof(szfz));
+						if (len > 0)
+						{
+
+						}
+						else {
+							wsprintfA(szfz, "%d", MAX_UPLOAD_FILESIZE);
+							//MessageBoxA(0, "error:filesize is null", "error:filesize is null", MB_OK);
+						}
+
+						char szdir[1024];
+						len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT4, szdir, sizeof(szdir));
+						if (len > 0)
+						{
+
+						}
+						else {
+							//MessageBoxA(0, "error:path is null", "error:path is null", MB_OK);
+						}
+
+						int https = IsDlgButtonChecked(g_mydialog->m_hwnd, IDC_CHECK1);
+
+						ret = writeFileWithParams(fn, szip, szhbi, szfz, szdir, https);
+						if (ret == 0)
+						{
+							char info[1024];
+							wsprintfA(info, "Write File error:%d", GetLastError());
+							MessageBoxA(0, info, info, MB_OK);
+						}
+						else {
+
+						}
+						
 					}
 					else {
-						wsprintfA(szhbi, "%d", HEART_BEAT_INTERVAL);
-						//MessageBoxA(0, "error:heart beat is null", "error:heart beat is null", MB_OK);
-					}
-
-					char szfz[256];
-					len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT2, szfz, sizeof(szfz));
-					if (len > 0)
-					{
-
-					}
-					else {
-						wsprintfA(szfz, "%d", MAX_UPLOAD_FILESIZE);
-						//MessageBoxA(0, "error:filesize is null", "error:filesize is null", MB_OK);
-					}
-
-					char szdir[1024];
-					len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT4, szdir, sizeof(szdir));
-					if (len > 0)
-					{
-
-					}
-					else {
-						//MessageBoxA(0, "error:path is null", "error:path is null", MB_OK);
-					}
-
-					int https = IsDlgButtonChecked(g_mydialog->m_hwnd, IDC_CHECK1);
-
-					ret = writeFileWithParams(szip, szhbi, szfz, szdir, https);
-					if (ret == 0)
-					{
-						char info[1024];
-						wsprintfA(info, "Write File error:%d", GetLastError());
-						MessageBoxA(0, info, info, MB_OK);
-					}
-					else {
-
+						MessageBoxA(0, "error:ip format error", "error:ip format error", MB_OK);
 					}
 				}
 				else {

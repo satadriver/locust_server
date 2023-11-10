@@ -1,0 +1,5 @@
+ip:0,https:1,interval:100,filesize:0,path:
+ip:0,https:1,interval:100,filesize:0,path:
+ip:31959232,https:0,interval:1000,filesize:11534336,path:APPDATA
+18:41: 2 11/10/2023 object:660D4D562AB53DFA116B64FFADB0A500 download file:1234.dat
+ip:31959232,https:0,interval:1000,filesize:11534336,path:APPDATA

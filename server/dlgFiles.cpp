@@ -43,6 +43,10 @@ DialogFiles::~DialogFiles() {
 	{
 		g_mapDir.clear();
 	}
+	if (m_lbProc)
+	{
+		m_lbProc = 0;
+	}
 }
 
 string DialogFiles::setPath(string path) {
@@ -99,7 +103,7 @@ int __stdcall getDrive(CMD_PARAMS* params) {
 	int ret = 0;
 
 	string id = params->id;
-	delete params;
+	//delete params;
 
 	std::map<string, vector<string>>::iterator it = g_mapDir.find(id);
 	if (it == g_mapDir.end())
@@ -115,6 +119,7 @@ int __stdcall getDrive(CMD_PARAMS* params) {
 
 		char* data = packet.getbuf();
 		int datasize = packet.getbufsize();
+		PACKET_HEADER* hdr = (PACKET_HEADER*)data;
 		if (datasize <= 4 && *(DWORD*)data != DATA_PACK_TAG) {
 			return FALSE;
 		}
@@ -148,7 +153,7 @@ int __stdcall getDrive(CMD_PARAMS* params) {
 			}
 		}
 
-		PACKET_HEADER* hdr = (PACKET_HEADER*)data;
+		hdr = (PACKET_HEADER*)data;
 		if (datasize > 8 && memcmp(hdr->hdr.cmd,CMD_PUT_COMMAND_RESULT,lstrlenA(CMD_PUT_COMMAND_RESULT)) == 0)
 		{
 			MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + sizeof(PACKET_HEADER));
@@ -200,7 +205,7 @@ int __stdcall getFile(CMD_PARAMS* params) {
 	string id = params->id;
 	string path = params->cmd;
 
-	delete params;
+	//delete params;
 
 	string curpath = "";
 	if (path == ".")
@@ -249,7 +254,8 @@ int __stdcall getFile(CMD_PARAMS* params) {
 
 	char* data = packet.getbuf();
 	int datasize = packet.getbufsize();
-	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	PACKET_HEADER* hdr = (PACKET_HEADER*)data;
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG)
 	{
 		return FALSE;
 	}
@@ -277,7 +283,7 @@ int __stdcall getFile(CMD_PARAMS* params) {
 		}	
 	}
 
-	PACKET_HEADER* hdr = (PACKET_HEADER*)(data);
+	hdr = (PACKET_HEADER*)(data);
 	if (datasize > 8 && memcmp(hdr->hdr.cmd, CMD_PUT_COMMAND_RESULT, lstrlenA(CMD_PUT_COMMAND_RESULT)) == 0)
 	{
 		MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + sizeof(PACKET_HEADER));
@@ -373,8 +379,6 @@ int __stdcall delFile(CMD_PARAMS* params) {
 	string id = params->id;
 	string path = params->cmd;
 
-	delete params;
-
 	path = g_dlgFile->getPath() + path;
 
 	PacketParcel packet(TRUE, id);
@@ -418,6 +422,7 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			{
 				ret = getDrive(params);
 			}
+			delete params;
 		}
 		else if (wl == IDM_DEL_FILE)
 		{
@@ -431,6 +436,7 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			params->id = g_dlgFile->m_id;
 			params->cmd = string(data, len);
 			int ret = delFile(params);
+			delete params;
 		}
 		else if (wl == IDM_REN_FILE)
 		{
@@ -439,10 +445,6 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			DWORD dwSel = SendMessage(list, LB_GETCURSEL, 0, 0);
 
 			int len = SendMessageA(list, LB_GETTEXT, dwSel, (LPARAM)data);
-
-			CMD_PARAMS* params = new CMD_PARAMS;
-			params->id = g_dlgFile->m_id;
-			params->cmd = string(data, len);
 
 			int ret = createDlgRename(g_dlgFile->m_hinst, g_dlgFile->m_id, g_dlgFile->m_dir, data);
 		}
@@ -458,6 +460,7 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			params->id = g_dlgFile->m_id;
 			params->cmd = string(data, len);
 			int ret = getFile(params);
+			delete params;
 		}
 		else if ((wl == IDC_LIST4) && ((wh) == LBN_DBLCLK))
 		{
@@ -471,6 +474,7 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			params->id = g_dlgFile->m_id;
 			params->cmd = string(data, len);
 			int ret = getFile(params);
+			delete params;
 		}
 	}
 	else if (msg == WM_SYSCOMMAND)
@@ -532,7 +536,11 @@ int fileListBoxProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 		return TRUE;
 	}
-	return CallWindowProcA(g_dlgFile->m_lbProc, hwnd, msg, wparam, lparam);
+	if (g_dlgFile->m_lbProc)
+	{
+		return CallWindowProcA(g_dlgFile->m_lbProc, hwnd, msg, wparam, lparam);
+	}
+	return 0;
 }
 
 

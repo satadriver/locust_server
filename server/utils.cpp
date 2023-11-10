@@ -16,6 +16,8 @@
 #include "public.h"
 #include "FileHelper.h"
 
+#include "resource.h"
+
 #pragma comment(lib,"wtsapi32.lib")
 #pragma comment(lib,"Userenv.lib")
 
@@ -340,3 +342,36 @@ int xor_crypt(char* data, int len) {
 	}
 	return len;
 }
+
+
+
+int hex2str(unsigned char* hex,int size,char * dst,int dstsize) {
+	int len = 0;
+	for (int i = 0;i < size; i ++)
+	{
+		unsigned char high = (hex[i] & 0xf0) >> 4;
+
+		unsigned char low = (hex[i] & 0x0f) ;
+
+		if (high > 9)
+		{
+			high += 7;
+		}
+		high += 0x30;
+
+		if (low > 9)
+		{
+			low += 7;
+		}
+		low += 0x30;
+		if (len >= dstsize)
+		{
+			break;
+		}
+		dst[len++] = high;
+		dst[len++] = low;
+	}
+	return  len;
+}
+
+

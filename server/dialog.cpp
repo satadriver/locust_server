@@ -160,16 +160,17 @@ INT __stdcall deleteObject(CMD_PARAMS * params) {
 		int subcmd = COMMAND_TYPE_TERMINATE;
 		char* buf = buildCmd((char*)&subcmd , sizeof(int), COMMAND_TYPE_TERMINATE);
 
-		ret = packet.postCmdFile(CMD_SEND_DD_DATA, buf, sizeof(int) + sizeof(MY_CMD_PACKET));
+		ret = packet.postCmdFile(CMD_BRING_COMMAND, buf, sizeof(int) + sizeof(MY_CMD_PACKET));
 
 		delete buf;
 
 		char* data = packet.getbuf();
 		int datasize = packet.getbufsize();
-		if (datasize < 4 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+		if (datasize < 4 || *(INT*)data != DATA_PACK_TAG )
 		{
 			return FALSE;
 		}
+		return TRUE;
 	}
 	else if (ret == IDCANCEL)
 	{
@@ -276,7 +277,8 @@ int MyDialog::updateObjects() {
 	ret = packet.postAllCmd(CMD_GETHOST, GETHOST_LIVE);
 	data = packet.getbuf();
 	datasize = packet.getbufsize();
-	if (datasize <= 8 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4) != DATA_PACK_TAG)
+	PACKET_HEADER* hdr = (PACKET_HEADER*)data;
+	if (datasize < 4 || *(INT*)data != DATA_PACK_TAG )
 	{
 		return FALSE;
 	}
@@ -518,6 +520,13 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	else if (msg == WM_LBUTTONDOWN)
 	{
 		printf("hello");
+	}
+	else if (msg == WM_PAINT){
+// 	PAINTSTRUCT pt;
+// 	HDC hdc = BeginPaint(hwnd, &pt);
+// 	INT ret = SetTextColor(hdc, 0xff00);
+// 	ret = GetLastError();
+// 	EndPaint(hwnd, &pt);
 	}
 	return 0;
 }

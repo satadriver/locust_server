@@ -145,7 +145,6 @@ public:
 
 	virtual ~PacketParcel();
 
-
 	PacketParcel(int bPost);
 
 	PacketParcel(int bPost, string userid);
@@ -184,4 +183,6 @@ protected:
 	char* m_data;
 
 	int m_datalen;
+
+	char m_sessionKey[32];
 };

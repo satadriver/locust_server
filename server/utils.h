@@ -44,3 +44,7 @@ int  isDebugged();
 int binarySearch(const char* data, int size, const char* tag, int tagsize);
 
 int xor_crypt(char* data, int len);
+
+int hex2str(unsigned char* hex, int len, char* dst, int dstsize);
+
+LPVOID getCert();
