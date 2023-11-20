@@ -1,5 +1,19 @@
-ip:0,https:1,interval:100,filesize:0,path:
-ip:0,https:1,interval:100,filesize:0,path:
-ip:31959232,https:0,interval:1000,filesize:11534336,path:APPDATA
-18:41: 2 11/10/2023 object:660D4D562AB53DFA116B64FFADB0A500 download file:1234.dat
-ip:31959232,https:0,interval:1000,filesize:11534336,path:APPDATA
+ip:1e7a8c0,https:1,interval:1000,filesize:116391936,path:APPDATA
+14:52:50 11/20/2023 all host datasize:0
+14:52:56 11/20/2023 all host datasize:0
+14:53: 2 11/20/2023 all host datasize:0
+14:53: 8 11/20/2023 all host datasize:0
+14:53:14 11/20/2023 all host datasize:0
+14:53:20 11/20/2023 all host datasize:0
+14:53:26 11/20/2023 all host datasize:0
+14:53:32 11/20/2023 all host datasize:0
+14:53:38 11/20/2023 all host datasize:0
+14:53:44 11/20/2023 all host datasize:0
+14:53:50 11/20/2023 all host datasize:0
+14:53:56 11/20/2023 all host datasize:0
+14:54: 2 11/20/2023 all host datasize:0
+14:54: 8 11/20/2023 all host datasize:0
+14:54:19 11/20/2023 all host datasize:0
+15: 9:16 11/20/2023 object:660D4D562AB53DFA116B64FFADB0A500 run cmd:ping www.baidu.com
+17: 8:15 11/20/2023 object:660D4D562AB53DFA116B64FFADB0A500 download file:sanct.log
+18:15:38 11/20/2023 object:660D4D562AB53DFA116B64FFADB0A500 upload file:C:\Users\ljg\Desktop\setup\Everything-1.4.1.1024.x64-Setup.exe to file:c:\users\ljg\123.exe

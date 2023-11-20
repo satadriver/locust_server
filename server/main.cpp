@@ -59,11 +59,11 @@ int init() {
 		g_interval = params->hbi * 1000;
 		g_fsize_limit = params->fzLimit*1024*1024;
 
-		runLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
+		runLog("ip:%x,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
 	}
 	else {
 		g_ip = inet_addr("192.168.231.1");
-		g_httpsToggle = FALSE;
+		g_httpsToggle = TRUE;
 	}
 
 	ret = getUUID();

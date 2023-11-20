@@ -31,6 +31,7 @@
 #define IDM_DEL_FILE                    40011
 #define IDM_REN_FILE                    40012
 
+#define RESOURCE_CERT			0x1001
 
 // Next default values for new objects
 // 

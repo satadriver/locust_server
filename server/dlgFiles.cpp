@@ -443,10 +443,12 @@ INT_PTR DialogFiles::dlgFileProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpar
 			char data[0x1000];
 			HWND list = GetDlgItem(g_dlgFile->m_hwnd, IDC_LIST2);
 			DWORD dwSel = SendMessage(list, LB_GETCURSEL, 0, 0);
-
-			int len = SendMessageA(list, LB_GETTEXT, dwSel, (LPARAM)data);
-
-			int ret = createDlgRename(g_dlgFile->m_hinst, g_dlgFile->m_id, g_dlgFile->m_dir, data);
+			if (dwSel)
+			{
+				int len = SendMessageA(list, LB_GETTEXT, dwSel, (LPARAM)data);
+				*(data + len) = 0;
+				int ret = createDlgRename(g_dlgFile->m_hinst, g_dlgFile->m_id, g_dlgFile->m_dir, data);
+			}
 		}
 		else if ((wl == IDC_LIST2) && ((wh) == LBN_DBLCLK))
 		{

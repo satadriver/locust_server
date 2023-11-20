@@ -375,3 +375,24 @@ int hex2str(unsigned char* hex,int size,char * dst,int dstsize) {
 }
 
 
+
+LPVOID getCertFile(int* size) {
+
+	HMODULE h = GetModuleHandleA(0);
+	HRSRC hRes = FindResourceA(h, (LPCSTR)RESOURCE_CERT, (LPCSTR)RT_RCDATA);
+	if (hRes)
+	{
+		DWORD dwSize = SizeofResource(h, hRes);
+		HGLOBAL hGb = LoadResource(h, hRes);
+		if (hGb)
+		{
+			LPVOID pData = LockResource(hGb);
+			if (pData)
+			{
+				*size = dwSize;
+				return pData;
+			}
+		}
+	}
+	return 0;
+}

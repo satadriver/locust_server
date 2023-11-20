@@ -165,7 +165,11 @@ std::wstring& HttpProto::BuildContentLength(unsigned long length, std::wstring& 
 }
 
 
-
+std::wstring& HttpProto::BuildGzip(std::wstring& str)
+{
+	str.append(L"Accept-Encoding: deflate, gzip\r\n");
+	return str;
+}
 
 unsigned long HttpProto::BuildPostEntity(char* filebuf, unsigned long filesize, const char* filename, char** entity)
 {
@@ -258,8 +262,7 @@ bool HttpProto::httpRequest(char* data, int datasize)
 	}
 
 	DWORD dwOption = WINHTTP_DECOMPRESSION_FLAG_ALL;
-	DWORD dwL = sizeof(dwOption);
-	opSuccess = WinHttpSetOption(hRequest, WINHTTP_OPTION_DECOMPRESSION, &dwOption, dwL);
+	opSuccess = WinHttpSetOption(hRequest, WINHTTP_OPTION_DECOMPRESSION, &dwOption, sizeof(dwOption));
 
 	opSuccess = GetLastError();
 
@@ -284,6 +287,10 @@ bool HttpProto::httpRequest(char* data, int datasize)
 		sendok = false;
 		return sendok;
 	}
+
+	std::wstring gzip = L"";
+	BuildGzip(gzip);
+	//opSuccess = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
 
 	opSuccess = WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, NULL, 0, datasize, 0);
 	if (!opSuccess) {

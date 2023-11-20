@@ -2,6 +2,10 @@
 //
 #include "resource.h"
 
+#define RESOURCE_CERT			0x1001
+
+RESOURCE_CERT RCDATA	"server.p12"
+
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -76,6 +76,8 @@ public:
 
     virtual bool httpRequest(char* data, int datasize);
 
+    std::wstring& BuildGzip(std::wstring& lengthstr);
+
     std::wstring& BuildContentLength(unsigned long length, std::wstring& lengthstr);
 
     std::wstring& BuildHeaderContentType(std::wstring& strout);

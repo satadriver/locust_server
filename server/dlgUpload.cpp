@@ -113,7 +113,22 @@ INT_PTR DialogUpload::dlgUploadProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 {
 	if (msg == WM_INITDIALOG)
 	{
+		DragAcceptFiles(hwnd, TRUE);
+	}
+	else if (msg == WM_DROPFILES)
+	{
+		HDROP hdrop = (HDROP)wparam;
+		char sDropFilePath[0x1000];
+		int iDropFileNums = 0;
+		iDropFileNums = DragQueryFileA(hdrop, 0xFFFFFFFF, NULL, 0);
+		for (int i = 0; i < iDropFileNums; i++)
+		{
+			int len = DragQueryFileA(hdrop, i, sDropFilePath, sizeof(sDropFilePath));
+			SetDlgItemTextA(hwnd, IDC_EDIT4, sDropFilePath);
+		}
 
+		//DragQueryFile(hdrop, 0, sDropFilePath, MAX_PATH);
+		DragFinish(hdrop);
 	}
 	else if ((msg & 0xffff) == WM_COMMAND)
 	{
@@ -143,14 +158,21 @@ INT_PTR DialogUpload::dlgUploadProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 			char lfn[0x1000];
 			char rfn[0x1000];
 			ret = GetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT4, lfn, sizeof(lfn));
-			ret = GetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT5, rfn, sizeof(rfn));
+			if (ret)
+			{
+				ret = GetDlgItemTextA(g_dlgUpload->m_hwnd, IDC_EDIT5, rfn, sizeof(rfn));
+				if (ret)
+				{
+					CMD_PARAMS* params = new CMD_PARAMS;
+					params->id = g_dlgUpload->m_id;
+					params->cmd = string(lfn);
+					params->append = string(rfn);
 
-			CMD_PARAMS* params = new CMD_PARAMS;
-			params->id = g_dlgUpload->m_id;
-			params->cmd = string(lfn);
-			params->append = string(rfn);
+					ret = uploadFile(params);
 
-			ret = uploadFile(params);
+					EndDialog(hwnd, 0);
+				}
+			}
 		}
 	}
 	else if (msg == WM_SYSCOMMAND)

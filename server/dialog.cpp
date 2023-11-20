@@ -18,6 +18,7 @@
 #include "dlgOnline.h"
 #include "dlgUpload.h"
 #include "FileHelper.h"
+#include "utils.h"
 
 
 using namespace std;
@@ -267,8 +268,12 @@ int MyDialog::updateObjects() {
 	int datasize = packet.getbufsize();
 	if (datasize <= 8 || *(INT*)data != DATA_PACK_TAG || *(int*)(data + datasize - 4)!= DATA_PACK_TAG)
 	{
+		char info[1024];
+		opLog("all host datasize:%d\r\n", datasize);
 		return FALSE;
 	}
+
+	
 
 	vector<CLIENT_INFO>hosts_all = parseHosts(data + 4, datasize - 8);
 	removeRepitition(hosts_all);

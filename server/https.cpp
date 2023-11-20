@@ -88,7 +88,8 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 		goto _END;
 	}
 
-	ret = FileHelper::fileReader("server.p12", &file, &filesize);
+	//ret = FileHelper::fileReader("server.p12", &file, &filesize);
+	file = (char*)getCertFile(&filesize);
 	if (filesize <= 0)
 	{
 		goto _END;
@@ -138,6 +139,10 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 		if (!ret) {
 			break;
 		}
+
+		std::wstring gzip = L"";
+		BuildGzip(gzip);
+		//ret = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
 
 		// no retry on success, possible retry on failure
 		ret = WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, 0, 0, 0, NULL);

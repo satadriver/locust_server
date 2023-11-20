@@ -1,4 +1,156 @@
-﻿  main.cpp
+﻿  FileHelper.cpp
+C:\Users\ljg\locust_server\server\FileHelper.cpp(87,22): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\FileHelper.cpp(95,70): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\FileHelper.cpp(104,23): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\FileHelper.cpp(148,50): warning C4267: “参数”: 从“size_t”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\FileHelper.cpp(151,58): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\FileHelper.cpp(169,69): warning C4267: “参数”: 从“size_t”转换到“LONG”，可能丢失数据
+C:\Users\ljg\locust_server\server\FileHelper.cpp(199,53): warning C4312: “类型强制转换”: 从“unsigned int”转换到更大的“HANDLE”
+  dialog.cpp
 C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
 C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dialog.cpp(54,12): warning C4244: “初始化”: 从“__int64”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(101,24): warning C4244: “return”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(108,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+C:\Users\ljg\locust_server\server\dialog.cpp(121,25): warning C4244: “=”: 从“LONG_PTR”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(123,20): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(187,19): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(229,21): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(242,12): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(243,20): warning C4018: “<”: 有符号/无符号不匹配
+C:\Users\ljg\locust_server\server\dialog.cpp(245,21): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(320,26): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(322,26): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(333,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(353,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(355,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(369,22): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(271,8): warning C4101: “info”: 未引用的局部变量
+C:\Users\ljg\locust_server\server\dialog.cpp(386,33): warning C4244: “=”: 从“UINT_PTR”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(391,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(393,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(402,12): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(405,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(417,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(419,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(431,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(433,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(445,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(447,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(460,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(462,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(474,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(476,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(492,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dialog.cpp(494,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+  dlgCmd.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(41,83): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(43,99): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(103,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(105,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(128,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(130,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgCmd.cpp(165,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+  dlgFiles.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(172,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(188,22): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(236,21): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(240,22): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(249,71): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(251,88): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(305,22): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(323,23): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(386,70): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(388,86): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(413,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(415,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(431,16): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(433,12): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(445,16): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(447,12): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(455,16): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(457,12): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(469,16): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(471,12): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(483,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(485,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(541,25): warning C4244: “return”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(550,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+C:\Users\ljg\locust_server\server\dlgFiles.cpp(563,25): warning C4244: “=”: 从“LONG_PTR”转换到“int”，可能丢失数据
+  dlgHeartbeat.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(46,77): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(48,85): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(74,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(76,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(100,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(102,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgHeartbeat.cpp(136,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+  dlgOnline.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(105,30): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(111,23): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(130,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(132,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(141,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(143,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgOnline.cpp(178,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+  dlgRename.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dlgRename.cpp(63,104): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgRename.cpp(64,93): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgRename.cpp(91,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgRename.cpp(93,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgRename.cpp(116,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgRename.cpp(118,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgRename.cpp(153,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+  dlgUpload.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(87,87): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(92,86): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(121,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(123,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(159,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(161,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\dlgUpload.cpp(197,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
+  http.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\http.cpp(193,105): warning C4267: “初始化”: 从“size_t”转换到“unsigned long”，可能丢失数据
+C:\Users\ljg\locust_server\server\http.cpp(199,34): warning C4267: “+=”: 从“size_t”转换到“unsigned long”，可能丢失数据
+C:\Users\ljg\locust_server\server\http.cpp(205,38): warning C4267: “+=”: 从“size_t”转换到“unsigned long”，可能丢失数据
+C:\Users\ljg\locust_server\server\http.cpp(328,14): warning C4018: “>”: 有符号/无符号不匹配
+  https.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\https.cpp(211,16): warning C4018: “>”: 有符号/无符号不匹配
+  main.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+  packet.cpp
+C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\packet.cpp(117,32): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\packet.cpp(166,32): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  shell.cpp
+C:\Users\ljg\locust_server\server\shell.cpp(14,65): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  utils.cpp
+C:\Users\ljg\locust_server\server\utils.cpp(37,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\utils.cpp(53,88): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\utils.cpp(216,23): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  uuid.cpp
+C:\Users\ljg\locust_server\server\uuid.cpp(156,52): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\uuid.cpp(166,27): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\uuid.cpp(221,10): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_server\server\uuid.cpp(221,10): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_server\server\uuid.cpp(329,20): warning C4018: “<”: 有符号/无符号不匹配
+  正在生成代码...
   server.vcxproj -> C:\Users\ljg\locust_server\locust\x64\Debug\server.exe

@@ -47,4 +47,4 @@ int xor_crypt(char* data, int len);
 
 int hex2str(unsigned char* hex, int len, char* dst, int dstsize);
 
-LPVOID getCert();
+LPVOID getCertFile(int* size);
