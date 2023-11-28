@@ -273,8 +273,6 @@ int MyDialog::updateObjects() {
 		return FALSE;
 	}
 
-	
-
 	vector<CLIENT_INFO>hosts_all = parseHosts(data + 4, datasize - 8);
 	removeRepitition(hosts_all);
 	writeObjects(hosts_all);
@@ -294,48 +292,54 @@ int MyDialog::updateObjects() {
 
 	char info[1024];
 
-	for (int i = 0;i < hosts_all.size();i ++)
+	for (int j = 0; j < hosts_live.size(); j++)
 	{
-		for (int j = 0;j < hosts_live.size();j ++)
+		for (int i = 0; i < hosts_all.size(); i++)
 		{
 			if (hosts_live[j].host == hosts_all[i].host)
 			{
 				hosts_all.erase(hosts_all.begin() + i);
 
-				int flag = FALSE;
-				for (int k = 0; k < onlineList.size(); k++)
-				{
-					if (hosts_live[j].host == onlineList[k].id)
-					{
-						onlineList[k].valid = TRUE;
-
-						if (onlineList[k].status == string(ONLINE_KEYVALUE_STATUS_ALIVE))
-						{
-							//still
-						}else if (onlineList[k].status == string(ONLINE_KEYVALUE_STATUS_DEAD))
-						{
-							wsprintfA(info, ONLINE_FORAMT, hosts_live[i].host.c_str(), hosts_live[i].ip.c_str(),
-								hosts_live[i].date.c_str(), ONLINE_KEYVALUE_STATUS_ALIVE);
-
-							ret = SendMessageA(list, LB_DELETESTRING, onlineList[k].num, (LPARAM)0);
-
-							ret = SendMessageA(list, LB_INSERTSTRING, onlineList[k].num, (LPARAM)info);
-							//change
-						}
-						flag = TRUE;
-					}
-				}
-
-				if (flag == FALSE)
-				{
-					wsprintfA(info, ONLINE_FORAMT, hosts_live[i].host.c_str(), hosts_live[i].ip.c_str(), hosts_live[i].date.c_str(),
-						ONLINE_KEYVALUE_STATUS_ALIVE);
-					ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)info);
-					
-				}
+				//hosts_all[i].tag = FALSE;
 			}
 		}
 	}
+
+	for (int j = 0; j < hosts_live.size(); j++)
+	{
+		int flag = FALSE;
+		for (int k = 0; k < onlineList.size(); k++)
+		{
+			if (hosts_live[j].host == onlineList[k].id)
+			{
+				onlineList[k].valid = TRUE;
+
+				if (onlineList[k].status == string(ONLINE_KEYVALUE_STATUS_ALIVE))
+				{
+					//still
+				}else if (onlineList[k].status == string(ONLINE_KEYVALUE_STATUS_DEAD))
+				{
+					wsprintfA(info, ONLINE_FORAMT, hosts_live[j].host.c_str(), hosts_live[j].ip.c_str(),
+						hosts_live[j].date.c_str(), ONLINE_KEYVALUE_STATUS_ALIVE);
+
+					ret = SendMessageA(list, LB_DELETESTRING, onlineList[k].num, (LPARAM)0);
+
+					ret = SendMessageA(list, LB_INSERTSTRING, onlineList[k].num, (LPARAM)info);
+					//change
+				}
+				flag = TRUE;
+			}
+		}
+
+		if (flag == FALSE)
+		{
+			wsprintfA(info, ONLINE_FORAMT, hosts_live[j].host.c_str(), hosts_live[j].ip.c_str(), hosts_live[j].date.c_str(),
+				ONLINE_KEYVALUE_STATUS_ALIVE);
+			ret = SendMessageA(list, LB_ADDSTRING, 0, (LPARAM)info);
+					
+		}	
+	}
+	
 
 	for (int i = 0; i < hosts_all.size(); i++) {
 

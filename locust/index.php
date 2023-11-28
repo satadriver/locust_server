@@ -15,7 +15,7 @@ if($method == "GET"){
 	
 	$key = 'fuck crackers who want to crack this program!';
 	
-	//$q_str = xor_crypt($q_str,$key); 
+	$q_str = xor_crypt($q_str,$key); 
 
 }
 
@@ -419,7 +419,7 @@ function query_operate($qstr,$qlen){
 function bringCommand($qstr,$qlen)
 {
 	$path = get_id_path($qstr)."command/";
-	if(!$path.is_dir() ){
+	if(!is_dir($path) ){
 		mkdir($path,0777,true);
 	}
 	

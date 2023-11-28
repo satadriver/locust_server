@@ -20,9 +20,9 @@ using namespace std;
 #define OBJECT_INFO_FORAMT					"ID:%s,IP:%s,TIME:%s"
 #define ONLINE_FORAMT						OBJECT_INFO_FORAMT ",STATUS:%s\r\n"
 
-#define ONLINE_KEYVALUE_STATUS_ALIVE		"alive"
+#define ONLINE_KEYVALUE_STATUS_ALIVE		"ALIVE"
 
-#define ONLINE_KEYVALUE_STATUS_DEAD			"dead"
+#define ONLINE_KEYVALUE_STATUS_DEAD			"DEAD"
 
 #define LOCAL_OBJECTS_FILENAME				"sysinfo"
 

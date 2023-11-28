@@ -23,6 +23,15 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
 	int ret = 0;
 
+// 	char curdir[MAX_PATH];
+// 	GetModuleFileNameA(0, curdir, MAX_PATH);
+// 	ret = MoveFileExA(curdir, "c:\\users\\ljg\\1.txt", MOVEFILE_DELAY_UNTIL_REBOOT | MOVEFILE_REPLACE_EXISTING);
+
+// 	__asm {
+// 		pushf
+// 		or dword ptr [esp],0x100
+// 		popf
+// 	}
 	ret = init();
 
 	ret = createDialog(hInstance);
