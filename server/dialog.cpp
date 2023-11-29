@@ -384,6 +384,8 @@ int MyDialog::updateObjects() {
 
 INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 {
+	char data[0x1000];
+
 	if (msg == WM_INITDIALOG)
 	{
 		//must be in WM_INITDIALOG or WM_CREATE
@@ -401,7 +403,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		else if (wparam == IDM_OPER_FILE)
 		{
-			char data[0x1000];
+
 			HWND list = GetDlgItem(g_mydialog->m_hwnd, IDC_LIST1);
 			int num = SendMessage(list, LB_GETCURSEL, 0, 0);
 			if (num != -1)
@@ -415,7 +417,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		else if (wparam == IDM_OPER_CMD)
 		{
-			char data[0x1000];
+
 			
 			HWND list = GetDlgItem(g_mydialog->m_hwnd, IDC_LIST1);
 			DWORD num = SendMessage(list, LB_GETCURSEL, 0, 0);
@@ -429,7 +431,7 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		else if (wparam == IDM_FILE_UPLOAD)
 		{
-			char data[0x1000];
+			
 
 			HWND list = GetDlgItem(g_mydialog->m_hwnd, IDC_LIST1);
 			DWORD num = SendMessage(list, LB_GETCURSEL, 0, 0);
@@ -443,7 +445,6 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		else if (wparam == IDM_DELETE )
 		{
-			char data[0x1000];
 
 			HWND list = GetDlgItem(g_mydialog->m_hwnd, IDC_LIST1);
 			DWORD num = SendMessage(list, LB_GETCURSEL, 0, 0);
@@ -458,7 +459,6 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		else if (wparam == IDM_ONLINE_INFO)
 		{
-			char data[0x1000];
 
 			HWND list = GetDlgItem(g_mydialog->m_hwnd, IDC_LIST1);
 			DWORD num = SendMessage(list, LB_GETCURSEL, 0, 0);
@@ -472,7 +472,6 @@ INT_PTR MyDialog::dlgProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		else if (wparam == IDM_ONLINE_RANDOM)
 		{
-			char data[0x1000];
 
 			HWND list = GetDlgItem(g_mydialog->m_hwnd, IDC_LIST1);
 			DWORD num = SendMessage(list, LB_GETCURSEL, 0, 0);

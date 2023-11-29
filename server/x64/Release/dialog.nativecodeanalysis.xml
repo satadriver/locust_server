@@ -4,19 +4,19 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
       <FILENAME>dialog.cpp</FILENAME>
-      <LINE>420</LINE>
+      <LINE>428</LINE>
       <COLUMN>9</COLUMN>
     </SFA>
     <DEFECTCODE>6246</DEFECTCODE>
-    <DESCRIPTION>“ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“417”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
+    <DESCRIPTION>“ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“425”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
     <FUNCTION>MyDialog::dlgProc</FUNCTION>
     <DECORATED>?dlgProc@MyDialog@@SA_JPEAUHWND__@@I_K_J@Z</DECORATED>
-    <FUNCLINE>379</FUNCLINE>
+    <FUNCLINE>385</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
         <FILENAME>dialog.cpp</FILENAME>
-        <LINE>417</LINE>
+        <LINE>425</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
     </PATH>
@@ -25,19 +25,19 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
       <FILENAME>dialog.cpp</FILENAME>
-      <LINE>449</LINE>
+      <LINE>456</LINE>
       <COLUMN>9</COLUMN>
     </SFA>
     <DEFECTCODE>6246</DEFECTCODE>
-    <DESCRIPTION>“ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“445”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
+    <DESCRIPTION>“ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“452”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
     <FUNCTION>MyDialog::dlgProc</FUNCTION>
     <DECORATED>?dlgProc@MyDialog@@SA_JPEAUHWND__@@I_K_J@Z</DECORATED>
-    <FUNCLINE>379</FUNCLINE>
+    <FUNCLINE>385</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
         <FILENAME>dialog.cpp</FILENAME>
-        <LINE>445</LINE>
+        <LINE>452</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
     </PATH>
@@ -46,19 +46,19 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
       <FILENAME>dialog.cpp</FILENAME>
-      <LINE>477</LINE>
+      <LINE>482</LINE>
       <COLUMN>9</COLUMN>
     </SFA>
     <DEFECTCODE>6246</DEFECTCODE>
-    <DESCRIPTION>“ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“474”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
+    <DESCRIPTION>“ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“479”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
     <FUNCTION>MyDialog::dlgProc</FUNCTION>
     <DECORATED>?dlgProc@MyDialog@@SA_JPEAUHWND__@@I_K_J@Z</DECORATED>
-    <FUNCLINE>379</FUNCLINE>
+    <FUNCLINE>385</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
         <FILENAME>dialog.cpp</FILENAME>
-        <LINE>474</LINE>
+        <LINE>479</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
     </PATH>
@@ -67,19 +67,19 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
       <FILENAME>dialog.cpp</FILENAME>
-      <LINE>498</LINE>
+      <LINE>503</LINE>
       <COLUMN>7</COLUMN>
     </SFA>
     <DEFECTCODE>6246</DEFECTCODE>
-    <DESCRIPTION>“hwnd”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“379”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
+    <DESCRIPTION>“hwnd”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“385”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。</DESCRIPTION>
     <FUNCTION>MyDialog::dlgProc</FUNCTION>
     <DECORATED>?dlgProc@MyDialog@@SA_JPEAUHWND__@@I_K_J@Z</DECORATED>
-    <FUNCLINE>379</FUNCLINE>
+    <FUNCLINE>385</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_server\server\</FILEPATH>
         <FILENAME>dialog.cpp</FILENAME>
-        <LINE>379</LINE>
+        <LINE>385</LINE>
         <COLUMN>31</COLUMN>
       </SFA>
     </PATH>

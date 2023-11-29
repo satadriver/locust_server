@@ -90,7 +90,7 @@ int writeRunningParams(string filename,char * ip,char * hbi,char * uploadsize,ch
 
 			if (shell)
 			{
-				string cmd = string("peshell.exe -e ") + filename;
+				string cmd = string("peshell.exe -e ") +  filename + " " + path ;
 				ret = WinExec(cmd.c_str(), SW_SHOW);
 			}
 
