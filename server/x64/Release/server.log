@@ -1,52 +1,10 @@
-﻿  dialog.cpp
-C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\locust_server\server\dialog.cpp(54,12): warning C4244: “初始化”: 从“__int64”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(101,24): warning C4244: “return”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(108,19): warning C4002: 类函数宏的调用“CreateDialogA”参数过多
-C:\Users\ljg\locust_server\server\dialog.cpp(121,25): warning C4244: “=”: 从“LONG_PTR”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(123,20): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(187,19): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(229,21): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(242,12): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(243,20): warning C4018: “<”: 有符号/无符号不匹配
-C:\Users\ljg\locust_server\server\dialog.cpp(245,21): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(325,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(327,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(338,22): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(357,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(359,24): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(373,22): warning C4244: “=”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(271,8): warning C4101: “info”: 未引用的局部变量
-C:\Users\ljg\locust_server\server\dialog.cpp(392,33): warning C4244: “=”: 从“UINT_PTR”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(397,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(399,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(408,12): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(411,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(423,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(425,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(437,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(439,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(450,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(452,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(464,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(466,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(477,14): warning C4244: “初始化”: 从“LRESULT”转换到“DWORD”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(479,13): warning C4244: “初始化”: 从“LRESULT”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(495,10): warning C4244: “初始化”: 从“WPARAM”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_server\server\dialog.cpp(497,10): warning C4244: “初始化”: 从“LPARAM”转换到“int”，可能丢失数据
-  main.cpp
-C:\Users\ljg\locust_server\server\packet.h(136,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\locust_server\server\packet.h(136,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\locust_server\server\main.cpp(271,16): warning C4101: “dlgex”: 未引用的局部变量
-  正在运行 C/C++ 代码分析...
-C:\Users\ljg\locust_server\server\dialog.cpp(428): warning C6246: “ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“425”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。: Lines: 425
-C:\Users\ljg\locust_server\server\dialog.cpp(456): warning C6246: “ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“452”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。: Lines: 452
-C:\Users\ljg\locust_server\server\dialog.cpp(482): warning C6246: “ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“479”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。: Lines: 479
-C:\Users\ljg\locust_server\server\dialog.cpp(503): warning C6246: “hwnd”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“385”行(“c:\users\ljg\locust_server\server\dialog.cpp”中)的声明。: Lines: 385
+﻿  utils.cpp
+C:\Users\ljg\locust_server\server\utils.cpp(37,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\utils.cpp(53,88): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_server\server\utils.cpp(217,23): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
   正在生成代码
-  1 of 763 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 763 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   server.vcxproj -> C:\Users\ljg\locust_server\locust\x64\Release\server.exe

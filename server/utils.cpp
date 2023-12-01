@@ -226,7 +226,21 @@ int removeChar(string &str, char c) {
 }
 
 
-int getCpuBits()
+
+int cpuBits() {
+	SYSTEM_INFO si;
+	GetNativeSystemInfo(&si);
+	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 || si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_IA64)
+		return 64;
+	else
+		return 32;
+}
+
+
+
+
+
+int wow64()
 {
 	BOOL bIsWow64 = FALSE;
 	//IsWow64Process is not available on all supported versions of Windows.
@@ -234,29 +248,43 @@ int getCpuBits()
 
 	char szIsWow64Process[] = { 'I','s','W','o','w','6','4','P','r','o','c','e','s','s',0 };
 
-	HMODULE hKernel32 = (HMODULE)LoadLibraryA("kernel32.dll");
-	if (hKernel32 == 0)
+	HMODULE hker = (HMODULE)LoadLibraryA("kernel32.dll");
+	if (hker == 0)
 	{
 		return FALSE;
 	}
-	
+
 	typedef BOOL(WINAPI* LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hKernel32, szIsWow64Process);
+	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hker, szIsWow64Process);
 	if (NULL != fnIsWow64Process)
 	{
 		int iRet = fnIsWow64Process(GetCurrentProcess(), &bIsWow64);
 		if (iRet)
 		{
-			if (bIsWow64)
-			{
-				return 64;
-			}
+			return bIsWow64;
 		}
+	}
+	return 0;
+}
+
+int getOsBits() {
+	int wow = wow64();
+
+	int cpubits = cpuBits();
+
+	if (cpubits == 64 && wow == FALSE)
+	{
+		return 64;
+	}
+	else if (cpubits == 64 && wow)
+	{
+		return 32;
+	}
+	else if (cpubits == 32 && wow == FALSE) {
+		return 32;
 	}
 	return 32;
 }
-
-
 
 HANDLE  bRunning(BOOL* exist)
 {

@@ -35,7 +35,7 @@ unsigned short crc16(unsigned char* data, int size);
 
 int removeChar(string &str, char c);
 
-int getCpuBits();
+int getOsBits();
 
 HANDLE  bRunning(BOOL* exist);
 
